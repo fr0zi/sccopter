@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="sc2-terrain" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="game/sc2-terrain_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="game" />
+				<Option object_output="tmp/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add library="glew32" />
+					<Add library="glfw3" />
+					<Add library="3ds" />
+					<Add library="SOIL" />
+					<Add library="opengl32" />
+					<Add library="glu32" />
+					<Add library="gdi32" />
+					<Add directory="libs/win" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/sc2-terrain" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="src/CCameraFPS.cpp" />
+		<Unit filename="src/CCameraFPS.hpp" />
+		<Unit filename="src/CDirector.hpp" />
+		<Unit filename="src/CLoader3ds.cpp" />
+		<Unit filename="src/CLoader3ds.hpp" />
+		<Unit filename="src/CMesh.cpp" />
+		<Unit filename="src/CMesh.hpp" />
+		<Unit filename="src/CMeshBuffer.cpp" />
+		<Unit filename="src/CMeshBuffer.hpp" />
+		<Unit filename="src/CMeshNode.cpp" />
+		<Unit filename="src/CMeshNode.hpp" />
+		<Unit filename="src/CNode.cpp" />
+		<Unit filename="src/CNode.hpp" />
+		<Unit filename="src/CRefCounter.hpp" />
+		<Unit filename="src/CResource.cpp" />
+		<Unit filename="src/CResource.hpp" />
+		<Unit filename="src/CSC2MapLoader.cpp" />
+		<Unit filename="src/CSC2MapLoader.hpp" />
+		<Unit filename="src/CShaderResource.cpp" />
+		<Unit filename="src/CShaderResource.hpp" />
+		<Unit filename="src/CStaticCamera.cpp" />
+		<Unit filename="src/CStaticCamera.hpp" />
+		<Unit filename="src/CTerrainNode.cpp" />
+		<Unit filename="src/CTerrainNode.hpp" />
+		<Unit filename="src/CTextureResource.cpp" />
+		<Unit filename="src/CTextureResource.hpp" />
+		<Unit filename="src/CVisioner.cpp" />
+		<Unit filename="src/CVisioner.hpp" />
+		<Unit filename="src/CWarehouser.cpp" />
+		<Unit filename="src/CWarehouser.hpp" />
+		<Unit filename="src/Includes.hpp" />
+		<Unit filename="src/LoaderBMP.cpp" />
+		<Unit filename="src/LoaderBMP.hpp" />
+		<Unit filename="src/S3DVertex.hpp" />
+		<Unit filename="src/SMaterial.hpp" />
+		<Unit filename="src/TextureLoaders.cpp" />
+		<Unit filename="src/TextureLoaders.hpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/utils.hpp" />
+		<Unit filename="src/vbLoaderDDS.cpp" />
+		<Unit filename="src/vbLoaderDDS.hpp" />
+		<Unit filename="src/vbTransform.cpp" />
+		<Unit filename="src/vbTransform.hpp" />
+		<Unit filename="src/vbWarehouser.hpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

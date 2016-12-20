@@ -1,0 +1,11 @@
+# EXECUTABLES
+game/sc2-terrain*
+
+# FILES
+*.layout
+*.depend
+*.dll
+*.save
+
+# DIRECTORIES
+tmp
