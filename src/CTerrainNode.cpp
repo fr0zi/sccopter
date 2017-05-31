@@ -2404,8 +2404,12 @@ void CTerrainNode::generateTerrainMesh(Tile* tiles)
 
     GLuint texId = _Warehouser->loadTexture("grid.jpg");
 
+    std::cout << "Texture ID: " << texId << std::endl;
+
     if (texId != 0)
         mat.textureId = texId;
+
+    std::cout << "Material Texture ID: " << mat.textureId << std::endl;
 
 
     CMeshBuffer* mb = new CMeshBuffer;
