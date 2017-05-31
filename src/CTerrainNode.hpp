@@ -14,13 +14,13 @@
 class CTerrainNode : virtual public CMeshNode
 {
     public:
-        CTerrainNode(CNode* parent = 0, CWarehouser* warehouser = 0, vbcString name = "SC2 Terrain", int* heights = 0, Tile* tiles = 0);
+        CTerrainNode(CNode* parent = 0, CWarehouser* warehouser = 0, vbcString name = "SC2 Terrain", Tile* tiles = 0);
         virtual ~CTerrainNode();
 
         void render(ERenderPass pass);
 
     private:
-        void generateTerrainMesh(const int* heights, Tile* tiles);
+        void generateTerrainMesh(Tile* tiles);
 
         //CMesh*  _Mesh;
         GLuint  _ShaderID;

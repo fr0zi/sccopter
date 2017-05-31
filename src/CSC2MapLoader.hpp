@@ -104,6 +104,65 @@ unsigned short ByteConversion(unsigned short word)
 
 const int TILES_COUNT = 16384;
 
+enum TileType {
+    ETT_FLAT = 0,
+    ETT_SLOPE_N,
+    ETT_SLOPE_E,
+    ETT_SLOPE_S,
+    ETT_SLOPE_W,
+    ETT_SLOPE_NE,
+    ETT_SLOPE_SE,
+    ETT_SLOPE_SW,
+    ETT_SLOPE_NW,
+    ETT_CORNER_NE,
+    ETT_CORNER_SE,
+    ETT_CORNER_SW,
+    ETT_CORNER_NW,
+    ETT_HIGHGROUND,
+    ETT_WATER_COVERED_FLAT,
+    ETT_WATER_COVERED_SLOPE_N,
+    ETT_WATER_COVERED_SLOPE_E,
+    ETT_WATER_COVERED_SLOPE_S,
+    ETT_WATER_COVERED_SLOPE_W,
+    ETT_WATER_COVERED_SLOPE_NE,
+    ETT_WATER_COVERED_SLOPE_SE,
+    ETT_WATER_COVERED_SLOPE_SW,
+    ETT_WATER_COVERED_SLOPE_NW,
+    ETT_WATER_COVERED_CORNER_NE,
+    ETT_WATER_COVERED_CORNER_SE,
+    ETT_WATER_COVERED_CORNER_SW,
+    ETT_WATER_COVERED_CORNER_NW,
+    ETT_WATER_COVERED_HIGHGROUND,
+    ETT_WATER_SUBMERGED_FLAT,
+    ETT_WATER_SUBMERGED_SLOPE_N,
+    ETT_WATER_SUBMERGED_SLOPE_E,
+    ETT_WATER_SUBMERGED_SLOPE_S,
+    ETT_WATER_SUBMERGED_SLOPE_W,
+    ETT_WATER_SUBMERGED_SLOPE_NE,
+    ETT_WATER_SUBMERGED_SLOPE_SE,
+    ETT_WATER_SUBMERGED_SLOPE_SW,
+    ETT_WATER_SUBMERGED_SLOPE_NW,
+    ETT_WATER_SUBMERGED_CORNER_NE,
+    ETT_WATER_SUBMERGED_CORNER_SE,
+    ETT_WATER_SUBMERGED_CORNER_SW,
+    ETT_WATER_SUBMERGED_CORNER_NW,
+    ETT_WATER_SUBMERGED_HIGHGROUND,
+    ETT_SURFACE_WATER_FLAT,
+    ETT_SURFACE_WATER_SLOPE_N,
+    ETT_SURFACE_WATER_SLOPE_E,
+    ETT_SURFACE_WATER_SLOPE_S,
+    ETT_SURFACE_WATER_SLOPE_W,
+    ETT_SURFACE_WATER_SLOPE_NE,
+    ETT_SURFACE_WATER_SLOPE_SE,
+    ETT_SURFACE_WATER_SLOPE_SW,
+    ETT_SURFACE_WATER_SLOPE_NW,
+    ETT_SURFACE_WATER_CORNER_NE,
+    ETT_SURFACE_WATER_CORNER_SE,
+    ETT_SURFACE_WATER_CORNER_SW,
+    ETT_SURFACE_WATER_CORNER_NW,
+    ETT_SURFACE_WATER_HIGHGROUND
+};
+
 struct segHeader {
     DWORD name;
     DWORD length;
@@ -112,7 +171,7 @@ struct segHeader {
 struct Tile
 {
     int height;
-
+    TileType type;
 };
 
 class CSC2MapLoader : public CRefCounter
@@ -121,14 +180,14 @@ class CSC2MapLoader : public CRefCounter
         CSC2MapLoader(vbcString sc2filename);
         ~CSC2MapLoader();
 
-        int* getTilesData();
+        //int* getTilesData();
 
         Tile* getTiles();
 
     private:
         FILE*       _file;
         segHeader   _segHeader;
-        int*        _tileHeight;
+        //int*        _tileHeight;
         Tile*        _tiles;
 
         void readMapData();

@@ -1,13 +1,13 @@
 #include "CTerrainNode.hpp"
 
-CTerrainNode::CTerrainNode(CNode* parent, CWarehouser* warehouser, vbcString name, int* heights, Tile* tiles)
+CTerrainNode::CTerrainNode(CNode* parent, CWarehouser* warehouser, vbcString name, Tile* tiles)
 : _Warehouser(warehouser),
     CNode(parent, name)
 {
     _Warehouser->grab();
 
-    if (heights && tiles)
-        generateTerrainMesh(heights, tiles);
+    if (tiles)
+        generateTerrainMesh(tiles);
 
 
 }
@@ -19,11 +19,12 @@ CTerrainNode::~CTerrainNode()
 }
 
 
-void CTerrainNode::generateTerrainMesh(const int* heights, Tile* tiles)
+void CTerrainNode::generateTerrainMesh(Tile* tiles)
 {
     const int TILES = 128;
+    const char VERTEX_COUNT = 9;
 
-    S3DVertex* vertices = new S3DVertex[TILES * TILES * 6];
+    S3DVertex* vertices = new S3DVertex[TILES * TILES * VERTEX_COUNT];
 
 
 
@@ -50,111 +51,2358 @@ void CTerrainNode::generateTerrainMesh(const int* heights, Tile* tiles)
     */
 
     //for (int y = 0; y < 128; ++y)
-    int y = 0;
+    //int y = 0;
     for (int y = 0; y < TILES; ++y)
         for (int x = 0; x < TILES; ++x)
         {
-            vertices[(y* 128 + x) * 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
-            vertices[(y* 128 + x) * 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
-            vertices[(y* 128 + x) * 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
-            vertices[(y* 128 + x) * 6].texcoord[0] = 1;
-            vertices[(y* 128 + x) * 6].texcoord[1] = 0;
+            if (tiles[y * 128 + x].type == ETT_SLOPE_N)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
 
-            vertices[(y* 128 + x) * 6 + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
-            vertices[(y* 128 + x) * 6 + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
-            vertices[(y* 128 + x) * 6 + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
-            vertices[(y* 128 + x) * 6 + 1].texcoord[0] = 0;
-            vertices[(y* 128 + x) * 6 + 1].texcoord[1] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
 
-            vertices[(y* 128 + x) * 6 + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
-            vertices[(y* 128 + x) * 6 + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
-            vertices[(y* 128 + x) * 6 + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
-            vertices[(y* 128 + x) * 6 + 2].texcoord[0] = 0;
-            vertices[(y* 128 + x) * 6 + 2].texcoord[1] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
 
-            vertices[(y* 128 + x) * 6 + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
-            vertices[(y* 128 + x) * 6 + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
-            vertices[(y* 128 + x) * 6 + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
-            vertices[(y* 128 + x) * 6 + 3].texcoord[0] = 0;
-            vertices[(y* 128 + x) * 6 + 3].texcoord[1] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
 
-            vertices[(y* 128 + x) * 6 + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
-            vertices[(y* 128 + x) * 6 + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
-            vertices[(y* 128 + x) * 6 + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
-            vertices[(y* 128 + x) * 6 + 4].texcoord[0] = 1;
-            vertices[(y* 128 + x) * 6 + 4].texcoord[1] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
 
-            vertices[(y* 128 + x) * 6 + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
-            vertices[(y* 128 + x) * 6 + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
-            vertices[(y* 128 + x) * 6 + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
-            vertices[(y* 128 + x) * 6 + 5].texcoord[0] = 1;
-            vertices[(y* 128 + x) * 6 + 5].texcoord[1] = 1;
-/*
-            vertices[x * 6].coord[0] = (-x * tileSize) - tileSize; //-10.0f;   // (x * tileSize) - tileSize
-            vertices[x * 6].coord[1] = (float)(*(heights + x) * heightScale);
-            vertices[x * 6].coord[2] = y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
 
-            vertices[x * 6 + 1].coord[0] = (-x * tileSize) - tileSize; //-10.f;   // (x * tileSize) - tileSize
-            vertices[x * 6 + 1].coord[1] = (float)(*(heights + x) * heightScale);
-            vertices[x * 6 + 1].coord[2] = (y * tileSize) + tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
 
-            vertices[x * 6 + 2].coord[0] = -x * tileSize; //0.0f;    // x * tileSize
-            vertices[x * 6 + 2].coord[1] = (float)(*(heights + x) * heightScale);
-            vertices[x * 6 + 2].coord[2] = y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
 
-            vertices[x * 6 + 3].coord[0] = (-x * tileSize) - tileSize; //-10.f;   // (x * tileSize) - tileSize
-            vertices[x * 6 + 3].coord[1] = (float)(*(heights + x) * heightScale);
-            vertices[x * 6 + 3].coord[2] = (y * tileSize) + tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_E)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
 
-            vertices[x * 6 + 4].coord[0] = -x * tileSize; //0.0f;    // x * tileSize
-            vertices[x * 6 + 4].coord[1] = (float)(*(heights + x) * heightScale);
-            vertices[x * 6 + 4].coord[2] = y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
 
-            vertices[x * 6 + 5].coord[0] = -x * tileSize; //0.0f;    // x * tileSize
-            vertices[x * 6 + 5].coord[1] = (float)(*(heights + x) * heightScale);
-            vertices[x * 6 + 5].coord[2] = (y * tileSize) + tileSize; //-10.0f;  // (y * tileSize) - tileSize
-*/
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_S)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_W)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_NE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_SE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_SW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_SLOPE_NW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_CORNER_NE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_CORNER_SE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_CORNER_SW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_CORNER_NW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_HIGHGROUND)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_FLAT)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_N)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_E)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_S)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_W)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_NE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_SE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_SW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_SLOPE_NW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_CORNER_NE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_CORNER_SE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_CORNER_SW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_CORNER_NW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_COVERED_HIGHGROUND)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_FLAT)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_N)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_E)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_S)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_W)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_NE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_SE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_SW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_SLOPE_NW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_CORNER_NE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_CORNER_SE)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_CORNER_SW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else if (tiles[y * 128 + x].type == ETT_WATER_SUBMERGED_CORNER_NW)
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+            else
+            {
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 1].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[0] = (x * tileSize) + tileSize; //-10.0f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 2].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[0] = (x * tileSize) + tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 3].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].coord[2] = -y * tileSize; //0.0f;    // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 4].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].coord[2] = (-y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 5].texcoord[1] = 1;
+
+                // side triangles
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[0] = x * tileSize; //0.0f;    // x * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[1] = tiles[y * 128 + x].height * heightScale; //(float)(*(heights + (y * 128 + x)) * heightScale);
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].coord[2] = -y * tileSize; //0.0f;     // y * tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[0] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 6].texcoord[1] = 0;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[1] = (tiles[y * 128 + x].height + 100) * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 7].texcoord[1] = 1;
+
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[0] = x * tileSize; //-10.f;   // (x * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[1] = tiles[y * 128 + x].height * heightScale;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].coord[2] = (-y * tileSize) - tileSize; //-10.0f;   // (y * tileSize) - tileSize
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[0] = 0;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+                vertices[(y* 128 + x) * VERTEX_COUNT + 8].texcoord[1] = 1;
+            }
+
+
         }
-    // for (y)
 
-    /*
-    int x = 0; int y = 0;
 
-    //S3DVertex v = new S3DVertex[4]
-    vertices[0].coord[0] = (x * tileSize) - tileSize; //-10.0f;   // (x * tileSize) - tileSize
-    vertices[0].coord[1] = 150.0f * heightScale;
-    vertices[0].coord[2] = y * tileSize; //0.0f;     // y * tileSize
 
-    vertices[1].coord[0] = (x * tileSize) - tileSize; //-10.f;   // (x * tileSize) - tileSize
-    vertices[1].coord[1] = 150.0f * heightScale;
-    vertices[1].coord[2] = (y * tileSize) + tileSize; //-10.0f;   // (y * tileSize) - tileSize
-
-    vertices[2].coord[0] = x * tileSize; //0.0f;    // x * tileSize
-    vertices[2].coord[1] = 150.0f * heightScale;
-    vertices[2].coord[2] = y * tileSize; //0.0f;    // y * tileSize
-
-    //vertices[3].coord[0] = x * tileSize; //0.0f;    // x * tileSize
-    //vertices[3].coord[1] = 0.0f;
-    //vertices[3].coord[2] = (y * tileSize) - tileSize; //-10.0f;  // (y * tileSize) - tileSize
-
-    vertices[3].coord[0] = (-x * tileSize) - tileSize; //-10.f;   // (x * tileSize) - tileSize
-    vertices[3].coord[1] = 150.0f * heightScale;
-    vertices[3].coord[2] = (y * tileSize) + tileSize; //-10.0f;   // (y * tileSize) - tileSize
-
-    vertices[4].coord[0] = -x * tileSize; //0.0f;    // x * tileSize
-    vertices[4].coord[1] = 150.0f * heightScale;
-    vertices[4].coord[2] = y * tileSize; //0.0f;    // y * tileSize
-
-    vertices[5].coord[0] = -x * tileSize; //0.0f;    // x * tileSize
-    vertices[5].coord[1] = 150.0f * heightScale;
-    vertices[5].coord[2] = (y * tileSize) + tileSize; //-10.0f;  // (y * tileSize) - tileSize
-
-    x = 1; y = 1;
-    */
 
     SMaterial mat;
 
-    GLuint texId = _Warehouser->loadTexture("asphalt.jpg");
+    GLuint texId = _Warehouser->loadTexture("grid.jpg");
 
     if (texId != 0)
         mat.textureId = texId;
@@ -162,7 +2410,7 @@ void CTerrainNode::generateTerrainMesh(const int* heights, Tile* tiles)
 
     CMeshBuffer* mb = new CMeshBuffer;
 
-    mb->setVertexData(vertices, TILES * TILES * 6);
+    mb->setVertexData(vertices, TILES * TILES * VERTEX_COUNT);
     mb->createVBO();
     mb->setMaterial(mat);
 

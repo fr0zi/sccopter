@@ -188,7 +188,8 @@ int main(int argc, char* argv[])
 	director = new CDirector("Director");
     director->setActiveCamera(camFPS);
 
-	CSC2MapLoader* sc2l = new CSC2MapLoader("LAKELAND.SC2");
+	//CSC2MapLoader* sc2l = new CSC2MapLoader("MYCITY.SC2");
+	CSC2MapLoader* sc2l = new CSC2MapLoader("calebopo.sc2");
 
 	// Setting game state to RUN
 	EGameState = EGS_RUN;
@@ -202,7 +203,7 @@ int main(int argc, char* argv[])
 
     //CTerrainNode* terr = new CTerrainNode(0, "SC2 Terrain", sc2l->getTilesData());
 
-    director->addTerrainNode(0, "SC2 Terrain", sc2l->getTilesData(), sc2l->getTiles());
+    director->addTerrainNode(0, "SC2 Terrain", sc2l->getTiles());
 
     //terr->drop();
 

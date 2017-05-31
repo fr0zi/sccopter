@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="sc2-terrain" />
+		<Option title="sccopter" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="game/sc2-terrain_d" prefix_auto="1" extension_auto="1" />
+				<Option output="game/sccopter_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="game" />
 				<Option object_output="tmp/Debug/" />
 				<Option type="1" />
@@ -28,7 +28,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/sc2-terrain" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/sccopter" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
