@@ -141,7 +141,7 @@ GLFWwindow* createWindow(GLuint width, GLuint height, GLuint xPos = 0, GLuint yP
 	glShadeModel(GL_SMOOTH);
 
 	glEnable(GL_LIGHTING);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
@@ -182,7 +182,8 @@ int main(int argc, char* argv[])
 	camFPS->setMoveSpeed(45.0f);
 
 	camFPS->setWindowDimensions(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camFPS->setPosition(0, 10, 15);
+	camFPS->setPosition(0, 200, 15);
+    camFPS->setFarValue(2000);
 
 	// Scene Manager
 	director = new CDirector("Director");
@@ -250,7 +251,7 @@ int main(int argc, char* argv[])
 		}
 
 		// Rendering
-		glClearColor(0.78, 0.78, 1.0, 1.0);
+		glClearColor(0.3, 0.6, 0.95, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             director->renderScene();

@@ -15,6 +15,9 @@ CTerrainNode::CTerrainNode(CNode* parent, CWarehouser* warehouser, vbcString nam
 
 CTerrainNode::~CTerrainNode()
 {
+    for (int i = 0; i < _tiles.size(); i++)
+        delete _tiles[i];
+
     _Warehouser->drop();
 }
 
@@ -24,7 +27,7 @@ void CTerrainNode::generateTerrainMesh(Tile* tiles)
     const int TILES = 128;
     const char VERTEX_COUNT = 9;
 
-    S3DVertex* vertices = new S3DVertex[TILES * TILES * VERTEX_COUNT];
+    //S3DVertex* vertices = new S3DVertex[TILES * TILES * VERTEX_COUNT];
 
 
 
@@ -52,6 +55,8 @@ void CTerrainNode::generateTerrainMesh(Tile* tiles)
 
     //for (int y = 0; y < 128; ++y)
     //int y = 0;
+
+    /*
     for (int y = 0; y < TILES; ++y)
         for (int x = 0; x < TILES; ++x)
         {
@@ -2396,30 +2401,78 @@ void CTerrainNode::generateTerrainMesh(Tile* tiles)
 
 
         }
+    */
 
 
+    for (int y = 0; y < TILES; ++y)
+        for (int x = 0; x < TILES; ++x)
+        {
+            //printf("Tworzenie kafla: %d\n", tiles[y * 128 + x].type);
+
+            CTerrainTile* tile = new CTerrainTile(x, y, tiles[y * 128 + x].height, tiles[y * 128 + x].type);
+
+            // chwilowy workaround na czas zaimplementowania wszystkich rodzajow kafli terenu
+            // jesli utworzony tile zwroci 0 vertexow, to znaczy ze jeszcze nie ma implementacji danego typu i mozna go usunac
+            if (tile->getVertexCount() > 0)
+                _tiles.push_back(tile);
+            //else
+            //    delete tile;
+        }
 
 
     SMaterial mat;
 
-    GLuint texId = _Warehouser->loadTexture("grid.jpg");
+    GLuint texId = _Warehouser->loadTexture("textures.png");
 
-    std::cout << "Texture ID: " << texId << std::endl;
+    //std::cout << "Texture ID: " << texId << std::endl;
 
     if (texId != 0)
         mat.textureId = texId;
 
-    std::cout << "Material Texture ID: " << mat.textureId << std::endl;
 
+
+    //std::cout << "Material Texture ID: " << mat.textureId << std::endl;
+
+    int totalVertexCount = 0;
+
+    for (int i = 0; i < _tiles.size(); i++)
+        totalVertexCount += _tiles[i]->getVertexCount();
+
+    printf("Total vertex count: %d\n", totalVertexCount);
+
+
+
+    S3DVertex* vertices = new S3DVertex[totalVertexCount];
+
+    int startPoint = 0;
+
+    for (int i = 0; i < _tiles.size(); i++)
+    {
+        for (int j = 0; j < _tiles[i]->getVertexCount(); j++)
+        {
+                vertices[startPoint].coord[0] = _tiles[i]->getVertices()[j].coord[0];
+                vertices[startPoint].coord[1] = _tiles[i]->getVertices()[j].coord[1];
+                vertices[startPoint].coord[2] = _tiles[i]->getVertices()[j].coord[2];
+                vertices[startPoint].texcoord[0] = _tiles[i]->getVertices()[j].texcoord[0];
+                vertices[startPoint].texcoord[1] = _tiles[i]->getVertices()[j].texcoord[1];
+
+                //printf("V %f\n", _tiles[i]->getVertices()[j].coord[0]);
+                //printf("V %f\n", _tiles[i]->getVertices()[j].coord[1]);
+
+                //printf("V %d: %f %f %f\n", startPoint, vertices[startPoint].coord[0], vertices[startPoint].coord[1], vertices[startPoint].coord[2]);
+                startPoint++;
+        }
+    }
 
     CMeshBuffer* mb = new CMeshBuffer;
 
-    mb->setVertexData(vertices, TILES * TILES * VERTEX_COUNT);
+    //mb->setVertexData(vertices, TILES * TILES * VERTEX_COUNT);
+    mb->setVertexData(vertices, totalVertexCount);
     mb->createVBO();
     mb->setMaterial(mat);
 
     m_Mesh = new CMesh;
-    //m_Mesh->setQuantumOfMeshBuffers(1);
+    m_Mesh->setQuantumOfMeshBuffers(1);
     m_Mesh->addMeshBuffer(mb);
 
 }

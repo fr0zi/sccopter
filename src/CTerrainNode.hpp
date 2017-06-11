@@ -7,9 +7,11 @@
 #include "CWarehouser.hpp"
 
 #include "CSC2MapLoader.hpp"
+#include "CTerrainTile.hpp"
 
+#include "vector"
 
-
+typedef std::vector<CTerrainTile*> TileList;
 
 class CTerrainNode : virtual public CMeshNode
 {
@@ -25,6 +27,8 @@ class CTerrainNode : virtual public CMeshNode
         //CMesh*  _Mesh;
         GLuint  _ShaderID;
         CWarehouser* _Warehouser;
+
+        TileList    _tiles;
 };
 
 #endif //__CTERRAINNODE_HPP__

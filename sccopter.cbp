@@ -99,6 +99,8 @@
 		<Unit filename="src/CStaticCamera.hpp" />
 		<Unit filename="src/CTerrainNode.cpp" />
 		<Unit filename="src/CTerrainNode.hpp" />
+		<Unit filename="src/CTerrainTile.cpp" />
+		<Unit filename="src/CTerrainTile.hpp" />
 		<Unit filename="src/CTextureResource.cpp" />
 		<Unit filename="src/CTextureResource.hpp" />
 		<Unit filename="src/CVisioner.cpp" />
