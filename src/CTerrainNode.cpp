@@ -2422,7 +2422,7 @@ void CTerrainNode::generateTerrainMesh(Tile* tiles)
 
     SMaterial mat;
 
-    GLuint texId = _Warehouser->loadTexture("textures.png");
+    GLuint texId = _Warehouser->loadTexture("textures128.png");
 
     //std::cout << "Texture ID: " << texId << std::endl;
 

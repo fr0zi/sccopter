@@ -4,6 +4,16 @@
 #include "CSC2MapLoader.hpp"
 #include "S3DVertex.hpp"
 
+enum TextureType {
+    Ground,
+    Water,
+    SubmergedNW,
+    SubmergedNE,
+    SubmergedSW,
+    SubmergedSE
+};
+
+
 class CTerrainTile
 {
     public:
@@ -22,6 +32,7 @@ class CTerrainTile
         unsigned char _x, _y;
 
         void generateMesh();
+        void setTexture();
 };
 
 

@@ -1,6 +1,7 @@
 #include "CMeshBuffer.hpp"
 
 CMeshBuffer::CMeshBuffer()
+: m_QuantumOfVertices(0)
 {
 
 }

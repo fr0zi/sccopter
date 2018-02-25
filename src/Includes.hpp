@@ -28,9 +28,10 @@ using namespace glm;
 // Type definitions
 typedef std::string vbcString;
 
-
 // Debug mode
 #define DEBUG_MODE
+
+#define degToRad(x) x*(3.141592f/180.0f)
 
 
 #endif // __INCLUDES_HPP__

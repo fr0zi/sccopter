@@ -11,6 +11,7 @@
 #include "vbTransform.hpp"
 #include "CTerrainNode.hpp"
 
+
 typedef std::list<CNode*>	NodeList;
 
 

@@ -124,32 +124,43 @@ void CSC2MapLoader::readMapData()
                     std::bitset<5> foo (ByteConversion(terHeight));
                     //printf("%d: ", foo.to_ulong());
 
+                    std::bitset<8> water (ByteConversion(terHeight));
+
                     // =============================
 
                     switch (foo.to_ulong())
                     {
                         case 0:
-                            //printf("-350\t");
-                            //_tileHeight[i] = -350;
-                            _tiles[i].height = -350;
+                            //printf("50\t");
+                            _tiles[i].height = 50;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 1:
-                            //printf("-250\t");
+                            //printf("150\t");
                             //_tileHeight[i] = -250;
-                            _tiles[i].height = -250;
+                            _tiles[i].height = 150;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 2:
-                            //printf("-150\t");
+                            //printf("250\t");
                             //_tileHeight[i] = -150;
-                            _tiles[i].height = -150;
+                            _tiles[i].height = 250;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
+                            //printf("%d\t", water);
                             break;
 
                         case 3:
-                            //printf("-50\t");
+                            //printf("350\t");
                             //_tileHeight[i] = -50;
-                            _tiles[i].height = -50;
+                            _tiles[i].height = 350;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
+                            //printf("%d\t", water);
                             //printf("%d\t", *(_tileHeight+i));
                             //printf("%x\t",ByteConversion(terHeight));
                             break;
@@ -157,170 +168,230 @@ void CSC2MapLoader::readMapData()
                         case 4:
                             //printf("50\t");
                             //_tileHeight[i] = 50;
-                            _tiles[i].height = 50;
+                            _tiles[i].height = 450;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
+                            //printf("%d\t", water);
                             break;
 
                         case 5:
                             //printf("150\t");
                             //_tileHeight[i] = 150;
-                            _tiles[i].height = 150;
+                            _tiles[i].height = 550;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
+                            //printf("%d\t", water);
                             //printf("%x\t",ByteConversion(terHeight));
                             break;
 
                         case 6:
                             //printf("250\t");
                             //_tileHeight[i] = 250;
-                            _tiles[i].height = 250;
+                            _tiles[i].height = 650;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
+                            //printf("%d\t", water);
                             break;
 
                         case 7:
                             //printf("350\t");
                             //_tileHeight[i] = 350;
-                            _tiles[i].height = 350;
+                            _tiles[i].height = 750;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
+                            //printf("%d\t", water);
                             break;
 
                         case 8:
                             //printf("450\t");
                             //_tileHeight[i] = 450;
-                            _tiles[i].height = 450;
+                            _tiles[i].height = 850;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 9:
                             //printf("550\t");
                             //_tileHeight[i] = 550;
-                            _tiles[i].height = 550;
+                            _tiles[i].height = 950;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 10:
                             //printf("650\t");
                             //_tileHeight[i] = 650;
-                            _tiles[i].height = 650;
+                            _tiles[i].height = 1050;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 11:
                             //printf("750\t");
                             //_tileHeight[i] = 750;
-                            _tiles[i].height = 750;
+                            _tiles[i].height = 1150;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 12:
                             //printf("850\t");
                             //_tileHeight[i] = 850;
-                            _tiles[i].height = 850;
+                            _tiles[i].height = 1250;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 13:
                             //printf("950\t");
                             //_tileHeight[i] = 950;
-                            _tiles[i].height = 950;
+                            _tiles[i].height = 1350;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 14:
                             //printf("1050\t");
                             //_tileHeight[i] = 1050;
-                            _tiles[i].height = 1050;
+                            _tiles[i].height = 1450;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 15:
                             //printf("1150\t");
                             //_tileHeight[i] = 1150;
-                            _tiles[i].height = 1150;
+                            _tiles[i].height = 1550;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 16:
                             //printf("1250\t");
                             //_tileHeight[i] = 1250;
-                            _tiles[i].height = 1250;
+                            _tiles[i].height = 1650;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 17:
                             //printf("1350\t");
                             //_tileHeight[i] = 1350;
-                            _tiles[i].height = 1350;
+                            _tiles[i].height = 1750;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 18:
                             //printf("1450\t");
                             //_tileHeight[i] = 1450;
-                            _tiles[i].height = 1450;
+                            _tiles[i].height = 1850;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 19:
                             //printf("1550\t");
                             //_tileHeight[i] = 1550;
-                            _tiles[i].height = 1550;
+                            _tiles[i].height = 1950;
+                            printf("%d: ", _tiles[i].height);
+                            printf("%d\t", water.test(7));
                             break;
 
                         case 20:
                             //printf("1650\t");
                             //_tileHeight[i] = 1650;
-                            _tiles[i].height = 1650;
+                            _tiles[i].height = 2050;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 21:
                             //printf("1750\t");
                             //_tileHeight[i] = 1750;
-                            _tiles[i].height = 1750;
+                            _tiles[i].height = 2150;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 22:
                             //printf("1850\t");
                             //_tileHeight[i] = 1850;
-                            _tiles[i].height = 1850;
+                            _tiles[i].height = 2250;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 23:
                             //printf("1950\t");
                             //_tileHeight[i] = 1950;
-                            _tiles[i].height = 1950;
+                            _tiles[i].height = 2350;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 24:
                             //printf("2050\t");
                             //_tileHeight[i] = 2050;
-                            _tiles[i].height = 2050;
+                            _tiles[i].height = 2450;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 25:
                             //printf("2150\t");
                             //_tileHeight[i] = 2150;
-                            _tiles[i].height = 2150;
+                            _tiles[i].height = 2550;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 26:
                             //printf("2250\t");
                             //_tileHeight[i] = 2250;
-                            _tiles[i].height = 2250;
+                            _tiles[i].height = 2650;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 27:
                             //printf("2350\t");
                             //_tileHeight[i] = 2350;
-                            _tiles[i].height = 2350;
+                            _tiles[i].height = 2750;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 28:
                             //printf("2450\t");
                             //_tileHeight[i] = 2450;
-                            _tiles[i].height = 2450;
+                            _tiles[i].height = 2850;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 29:
                             //printf("2550\t");
                             //_tileHeight[i] = 2550;
-                            _tiles[i].height = 2550;
+                            _tiles[i].height = 2950;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 30:
                             //printf("2650\t");
                             //_tileHeight[i] = 2650;
-                            _tiles[i].height = 2650;
+                            _tiles[i].height = 3050;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
 
                         case 31:
                             //printf("2750\t");
                             //_tileHeight[i] = 2750;
-                            _tiles[i].height = 2750;
+                            _tiles[i].height = 3150;
+                            //printf("%d: ", _tiles[i].height);
+                            //printf("%d\t", water.test(7));
                             break;
                     }
                     //*/
@@ -365,282 +436,283 @@ void CSC2MapLoader::readMapData()
 
                             if (data2 == 0x00)
                             {
-                                printf("Flat terrain\n");
+                                //printf("Flat terrain\n");
                                 _tiles[totalTile].type = ETT_FLAT;
                             }
                             else if (data2 == 0x01)
                             {
-                                printf("Slope N\n");
+                                //printf("Slope N\n");
                                 _tiles[totalTile].type = ETT_SLOPE_N;
                             }
                             else if (data2 == 0x02)
                             {
-                                printf("Slope E\n");
+                                //printf("Slope E\n");
                                 _tiles[totalTile].type = ETT_SLOPE_E;
                             }
                             else if (data2 == 0x03)
                             {
-                                printf("Slope S\n");
+                                //printf("Slope S\n");
                                 _tiles[totalTile].type = ETT_SLOPE_S;
                             }
                             else if (data2 == 0x04)
                             {
-                                printf("Slope W\n");
+                                //printf("Slope W\n");
                                 _tiles[totalTile].type = ETT_SLOPE_W;
                             }
                             else if (data2 == 0x05)
                             {
-                                printf("Slope N-E\n");
+                                //printf("Slope N-E\n");
                                 _tiles[totalTile].type = ETT_SLOPE_NE;
                             }
                             else if (data2 == 0x06)
                             {
-                                printf("Slope S-E\n");
+                                //printf("Slope S-E\n");
                                 _tiles[totalTile].type = ETT_SLOPE_SE;
                             }
                             else if (data2 == 0x07)
                             {
-                                printf("Slope S-W\n");
+                                //printf("Slope S-W\n");
                                 _tiles[totalTile].type = ETT_SLOPE_SW;
                             }
                             else if (data2 == 0x08)
                             {
-                                printf("Slope N-W\n");
+                                //printf("Slope N-W\n");
                                 _tiles[totalTile].type = ETT_SLOPE_NW;
                             }
                             else if (data2 == 0x09)
                             {
-                                printf("Corner N-E\n");
+                                //printf("Corner N-E\n");
                                 _tiles[totalTile].type = ETT_CORNER_NE;
                             }
                             else if (data2 == 0x0a)
                             {
-                                printf("Corner S-E\n");
+                                //printf("Corner S-E\n");
                                 _tiles[totalTile].type = ETT_CORNER_SE;
                             }
                             else if (data2 == 0x0b)
                             {
-                                printf("Corner S-W\n");
+                                //printf("Corner S-W\n");
                                 _tiles[totalTile].type = ETT_CORNER_SW;
                             }
                             else if (data2 == 0x0c)
                             {
-                                printf("Corner N-W\n");
+                                //printf("Corner N-W\n");
                                 _tiles[totalTile].type = ETT_CORNER_NW;
                             }
                             else if (data2 == 0x0d)
                             {
-                                printf("High ground\n");
+                                //printf("High ground\n");
                                 _tiles[totalTile].type = ETT_HIGHGROUND;
                             }
                             else if (data2 == 0x10)
                             {
-                                printf("Water covered flat terrain\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_FLAT;
+                                //printf("Water covered flat terrain\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_FLAT;
                             }
                             else if (data2 == 0x11)
                             {
-                                printf("Water covered slope N\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_N;
+                                //printf("Water covered slope N\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_N;
                             }
                             else if (data2 == 0x12)
                             {
-                                printf("Water covered slope E\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_E;
+                                //printf("Water covered slope E\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_E;
                             }
                             else if (data2 == 0x13)
                             {
-                                printf("Water covered slope S\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_S;
+                                //printf("Water covered slope S\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_S;
                             }
                             else if (data2 == 0x14)
                             {
-                                printf("Water covered slope W\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_W;
+                                //printf("Water covered slope W\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_W;
                             }
                             else if (data2 == 0x15)
                             {
-                                printf("Water covered slope N-E\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_NE;
+                                //printf("Water covered slope N-E\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_NE;
                             }
                             else if (data2 == 0x16)
                             {
-                                printf("Water covered slope S-E\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_SE;
+                                //printf("Water covered slope S-E\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_SE;
                             }
                             else if (data2 == 0x17)
                             {
-                                printf("Water covered slope S-W\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_SW;
+                                //printf("Water covered slope S-W\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_SW;
                             }
                             else if (data2 == 0x18)
                             {
-                                printf("Water covered slope N-W\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_SLOPE_NW;
+                                //printf("Water covered slope N-W\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_SLOPE_NW;
                             }
                             else if (data2 == 0x19)
                             {
-                                printf("Water covered corner N-E\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_CORNER_NE;
+                                //printf("Water covered corner N-E\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_CORNER_NE;
                             }
                             else if (data2 == 0x1a)
                             {
-                                printf("Water covered corner S-E\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_CORNER_SE;
+                                //printf("Water covered corner S-E\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_CORNER_SE;
                             }
                             else if (data2 == 0x1b)
                             {
-                                printf("Water covered corner S-W\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_CORNER_SW;
+                                //printf("Water covered corner S-W\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_CORNER_SW;
                             }
                             else if (data2 == 0x1c)
                             {
-                                printf("Water covered corner N-W\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_CORNER_NW;
+                                //printf("Water covered corner N-W\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_CORNER_NW;
                             }
                             else if (data2 == 0x1d)
                             {
-                                printf("Water covered high ground N-E\n");
-                                _tiles[totalTile].type = ETT_WATER_COVERED_HIGHGROUND;
+                                //printf("Water covered high ground N-E\n");
+                                _tiles[totalTile].type = ETT_UNDERWATER_HIGHGROUND;
                             }
                             else if (data2 == 0x20)
                             {
-                                printf("Water submerged flat terrain\n");
+                                //printf("Water submerged flat terrain\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_FLAT;
                             }
                             else if (data2 == 0x21)
                             {
-                                printf("Water submerged slope N\n");
+                                //printf("Water submerged slope N\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_N;
                             }
                             else if (data2 == 0x22)
                             {
-                                printf("Water submerged slope E\n");
+                                //printf("Water submerged slope E\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_E;
                             }
                             else if (data2 == 0x23)
                             {
-                                printf("Water submerged slope S\n");
+                                //printf("Water submerged slope S\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_S;
                             }
                             else if (data2 == 0x24)
                             {
-                                printf("Water submerged slope W\n");
+                                //printf("Water submerged slope W\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_W;
                             }
                             else if (data2 == 0x25)
                             {
-                                printf("Water submerged slope N-E\n");
+                                //printf("Water submerged slope N-E\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_NE;
                             }
                             else if (data2 == 0x26)
                             {
-                                printf("Water submerged slope S-E\n");
+                                //printf("Water submerged slope S-E\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_SE;
                             }
                             else if (data2 == 0x27)
                             {
-                                printf("Water submerged slope S-W\n");
+                                //printf("Water submerged slope S-W\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_SW;
+                                //printf("!!!!!Type: %d\n", _tiles[totalTile].type);
                             }
                             else if (data2 == 0x28)
                             {
-                                printf("Water submerged slope N-W\n");
+                                //printf("Water submerged slope N-W\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_SLOPE_NW;
                             }
                             else if (data2 == 0x29)
                             {
-                                printf("Water submerged corner N-E\n");
+                                //printf("Water submerged corner N-E\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_CORNER_NE;
                             }
                             else if (data2 == 0x2a)
                             {
-                                printf("Water submerged corner S-E\n");
+                                //printf("Water submerged corner S-E\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_CORNER_SE;
                             }
                             else if (data2 == 0x2b)
                             {
-                                printf("Water submerged corner S-W\n");
+                                //printf("Water submerged corner S-W\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_CORNER_SW;
                             }
                             else if (data2 == 0x2c)
                             {
-                                printf("Water submerged corner N-W\n");
+                                //printf("Water submerged corner N-W\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_CORNER_NW;
                             }
                             else if (data2 == 0x2d)
                             {
-                                printf("Water submerged high ground N-E\n");
+                                //printf("Water submerged high ground N-E\n");
                                 _tiles[totalTile].type = ETT_WATER_SUBMERGED_HIGHGROUND;
                             }
                             else if (data2 == 0x30)
                             {
-                                printf("Terrain with water on the surface\n");
+                                //printf("Terrain with water on the surface\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_FLAT;
                             }
                             else if (data2 == 0x31)
                             {
-                                printf("Terrain with water on the surface, slope N\n");
+                                //printf("Terrain with water on the surface, slope N\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_N;
                             }
                             else if (data2 == 0x32)
                             {
-                                printf("Terrain with water on the surface, slope E\n");
+                                //printf("Terrain with water on the surface, slope E\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_E;
                             }
                             else if (data2 == 0x33)
                             {
-                                printf("Terrain with water on the surface, slope S\n");
+                                //printf("Terrain with water on the surface, slope S\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_S;
                             }
                             else if (data2 == 0x34)
                             {
-                                printf("Terrain with water on the surface, slope W\n");
+                                //printf("Terrain with water on the surface, slope W\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_W;
                             }
                             else if (data2 == 0x35)
                             {
-                                printf("Terrain with water on the surface, slope N-E\n");
+                                //printf("Terrain with water on the surface, slope N-E\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_NE;
                             }
                             else if (data2 == 0x36)
                             {
-                                printf("Terrain with water on the surface, slope S-E\n");
+                                //printf("Terrain with water on the surface, slope S-E\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_SE;
                             }
                             else if (data2 == 0x37)
                             {
-                                printf("Terrain with water on the surface, slope S-W\n");
+                                //printf("Terrain with water on the surface, slope S-W\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_SW;
                             }
                             else if (data2 == 0x38)
                             {
-                                printf("Terrain with water on the surface, slope N-W\n");
+                                //printf("Terrain with water on the surface, slope N-W\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_SLOPE_NW;
                             }
                             else if (data2 == 0x39)
                             {
-                                printf("Terrain with water on the surface, corner N-E\n");
+                                //printf("Terrain with water on the surface, corner N-E\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_CORNER_NE;
                             }
                             else if (data2 == 0x3a)
                             {
-                                printf("Terrain with water on the surface, corner S-E\n");
+                                //printf("Terrain with water on the surface, corner S-E\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_CORNER_SE;
                             }
                             else if (data2 == 0x3b)
                             {
-                                printf("Terrain with water on the surface, corner S-W\n");
+                                //printf("Terrain with water on the surface, corner S-W\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_CORNER_SW;
                             }
                             else if (data2 == 0x3c)
                             {
-                                printf("Terrain with water on the surface, corner N-W\n");
+                                //printf("Terrain with water on the surface, corner N-W\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_CORNER_NW;
                             }
                             else if (data2 == 0x3d)
                             {
-                                printf("Terrain with water on the surface\n");
+                                //printf("Terrain with water on the surface\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_HIGHGROUND;
                             }
                             else
@@ -672,282 +744,282 @@ void CSC2MapLoader::readMapData()
 
                             if (data2 == 0x00)
                             {
-                                printf("Flat terrain\n");
+                                //printf("Flat terrain\n");
                                 tileType = ETT_FLAT;
                             }
                             else if (data2 == 0x01)
                             {
-                                printf("Slope N\n");
+                                //printf("Slope N\n");
                                 tileType = ETT_SLOPE_N;
                             }
                             else if (data2 == 0x02)
                             {
-                                printf("Slope E\n");
+                                //printf("Slope E\n");
                                 tileType = ETT_SLOPE_E;
                             }
                             else if (data2 == 0x03)
                             {
-                                printf("Slope S\n");
+                                //printf("Slope S\n");
                                 tileType = ETT_SLOPE_S;
                             }
                             else if (data2 == 0x04)
                             {
-                                printf("Slope W\n");
+                                //printf("Slope W\n");
                                 tileType = ETT_SLOPE_W;
                             }
                             else if (data2 == 0x05)
                             {
-                                printf("Slope N-E\n");
+                                //printf("Slope N-E\n");
                                 tileType = ETT_SLOPE_NE;
                             }
                             else if (data2 == 0x06)
                             {
-                                printf("Slope S-E\n");
+                                //printf("Slope S-E\n");
                                 tileType = ETT_SLOPE_SE;
                             }
                             else if (data2 == 0x07)
                             {
-                                printf("Slope S-W\n");
+                                //printf("Slope S-W\n");
                                 tileType = ETT_SLOPE_SW;
                             }
                             else if (data2 == 0x08)
                             {
-                                printf("Slope N-W\n");
+                                //printf("Slope N-W\n");
                                 tileType = ETT_SLOPE_NW;
                             }
                             else if (data2 == 0x09)
                             {
-                                printf("Corner N-E\n");
+                                //printf("Corner N-E\n");
                                 tileType = ETT_CORNER_NE;
                             }
                             else if (data2 == 0x0a)
                             {
-                                printf("Corner S-E\n");
+                                //printf("Corner S-E\n");
                                 tileType = ETT_CORNER_SE;
                             }
                             else if (data2 == 0x0b)
                             {
-                                printf("Corner S-W\n");
+                                //printf("Corner S-W\n");
                                 tileType = ETT_CORNER_SW;
                             }
                             else if (data2 == 0x0c)
                             {
-                                printf("Corner N-W\n");
+                                //printf("Corner N-W\n");
                                 tileType = ETT_CORNER_NW;
                             }
                             else if (data2 == 0x0d)
                             {
-                                printf("High ground\n");
+                                //printf("High ground\n");
                                 tileType = ETT_HIGHGROUND;
                             }
                             else if (data2 == 0x10)
                             {
-                                printf("Water covered flat terrain\n");
-                                tileType = ETT_WATER_COVERED_FLAT;
+                                //printf("Water covered flat terrain\n");
+                                tileType = ETT_UNDERWATER_FLAT;
                             }
                             else if (data2 == 0x11)
                             {
-                                printf("Water covered slope N\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_N;
+                                //printf("Water covered slope N\n");
+                                tileType = ETT_UNDERWATER_SLOPE_N;
                             }
                             else if (data2 == 0x12)
                             {
-                                printf("Water covered slope E\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_E;
+                                //printf("Water covered slope E\n");
+                                tileType = ETT_UNDERWATER_SLOPE_E;
                             }
                             else if (data2 == 0x13)
                             {
-                                printf("Water covered slope S\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_S;
+                                //printf("Water covered slope S\n");
+                                tileType = ETT_UNDERWATER_SLOPE_S;
                             }
                             else if (data2 == 0x14)
                             {
-                                printf("Water covered slope W\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_W;
+                                //printf("Water covered slope W\n");
+                                tileType = ETT_UNDERWATER_SLOPE_W;
                             }
                             else if (data2 == 0x15)
                             {
-                                printf("Water covered slope N-E\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_NE;
+                                //printf("Water covered slope N-E\n");
+                                tileType = ETT_UNDERWATER_SLOPE_NE;
                             }
                             else if (data2 == 0x16)
                             {
-                                printf("Water covered slope S-E\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_SE;
+                                //printf("Water covered slope S-E\n");
+                                tileType = ETT_UNDERWATER_SLOPE_SE;
                             }
                             else if (data2 == 0x17)
                             {
-                                printf("Water covered slope S-W\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_SW;
+                                //printf("Water covered slope S-W\n");
+                                tileType = ETT_UNDERWATER_SLOPE_SW;
                             }
                             else if (data2 == 0x18)
                             {
-                                printf("Water covered slope N-W\n");
-                                tileType = ETT_WATER_COVERED_SLOPE_NW;
+                                //printf("Water covered slope N-W\n");
+                                tileType = ETT_UNDERWATER_SLOPE_NW;
                             }
                             else if (data2 == 0x19)
                             {
-                                printf("Water covered corner N-E\n");
-                                tileType = ETT_WATER_COVERED_CORNER_NE;
+                                //printf("Water covered corner N-E\n");
+                                tileType = ETT_UNDERWATER_CORNER_NE;
                             }
                             else if (data2 == 0x1a)
                             {
-                                printf("Water covered corner S-E\n");
-                                tileType = ETT_WATER_COVERED_CORNER_SE;
+                                //printf("Water covered corner S-E\n");
+                                tileType = ETT_UNDERWATER_CORNER_SE;
                             }
                             else if (data2 == 0x1b)
                             {
-                                printf("Water covered corner S-W\n");
-                                tileType = ETT_WATER_COVERED_CORNER_SW;
+                                //printf("Water covered corner S-W\n");
+                                tileType = ETT_UNDERWATER_CORNER_SW;
                             }
                             else if (data2 == 0x1c)
                             {
-                                printf("Water covered corner N-W\n");
-                                tileType = ETT_WATER_COVERED_CORNER_NW;
+                                //printf("Water covered corner N-W\n");
+                                tileType = ETT_UNDERWATER_CORNER_NW;
                             }
                             else if (data2 == 0x1d)
                             {
-                                printf("Water covered high ground N-E\n");
-                                tileType = ETT_WATER_COVERED_HIGHGROUND;
+                                //printf("Water covered high ground N-E\n");
+                                tileType = ETT_UNDERWATER_HIGHGROUND;
                             }
                             else if (data2 == 0x20)
                             {
-                                printf("Water submerged flat terrain\n");
+                                //printf("Water submerged flat terrain\n");
                                 tileType = ETT_WATER_SUBMERGED_FLAT;
                             }
                             else if (data2 == 0x21)
                             {
-                                printf("Water submerged slope N\n");
+                                //printf("Water submerged slope N\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_N;
                             }
                             else if (data2 == 0x22)
                             {
-                                printf("Water submerged slope E\n");
+                                //printf("Water submerged slope E\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_E;
                             }
                             else if (data2 == 0x23)
                             {
-                                printf("Water submerged slope S\n");
+                                //printf("Water submerged slope S\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_S;
                             }
                             else if (data2 == 0x24)
                             {
-                                printf("Water submerged slope W\n");
+                                //printf("Water submerged slope W\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_W;
                             }
                             else if (data2 == 0x25)
                             {
-                                printf("Water submerged slope N-E\n");
+                                //printf("Water submerged slope N-E\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_NE;
                             }
                             else if (data2 == 0x26)
                             {
-                                printf("Water submerged slope S-E\n");
+                                //printf("Water submerged slope S-E\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_SE;
                             }
                             else if (data2 == 0x27)
                             {
-                                printf("Water submerged slope S-W\n");
+                                //printf("Water submerged slope S-W\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_SW;
                             }
                             else if (data2 == 0x28)
                             {
-                                printf("Water submerged slope N-W\n");
+                                //printf("Water submerged slope N-W\n");
                                 tileType = ETT_WATER_SUBMERGED_SLOPE_NW;
                             }
                             else if (data2 == 0x29)
                             {
-                                printf("Water submerged corner N-E\n");
+                                //printf("Water submerged corner N-E\n");
                                 tileType = ETT_WATER_SUBMERGED_CORNER_NE;
                             }
                             else if (data2 == 0x2a)
                             {
-                                printf("Water submerged corner S-E\n");
+                                //printf("Water submerged corner S-E\n");
                                 tileType = ETT_WATER_SUBMERGED_CORNER_SE;
                             }
                             else if (data2 == 0x2b)
                             {
-                                printf("Water submerged corner S-W\n");
+                                //printf("Water submerged corner S-W\n");
                                 tileType = ETT_WATER_SUBMERGED_CORNER_SW;
                             }
                             else if (data2 == 0x2c)
                             {
-                                printf("Water submerged corner N-W\n");
+                                //printf("Water submerged corner N-W\n");
                                 tileType = ETT_WATER_SUBMERGED_CORNER_NW;
                             }
                             else if (data2 == 0x2d)
                             {
-                                printf("Water submerged high ground N-E\n");
+                                //printf("Water submerged high ground N-E\n");
                                 tileType = ETT_WATER_SUBMERGED_HIGHGROUND;
                             }
                             else if (data2 == 0x30)
                             {
-                                printf("Terrain with water on the surface\n");
+                                //printf("Terrain with water on the surface\n");
                                 tileType = ETT_SURFACE_WATER_FLAT;
                             }
                             else if (data2 == 0x31)
                             {
-                                printf("Terrain with water on the surface, slope N\n");
+                                //printf("Terrain with water on the surface, slope N\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_N;
                             }
                             else if (data2 == 0x32)
                             {
-                                printf("Terrain with water on the surface, slope E\n");
+                                //printf("Terrain with water on the surface, slope E\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_E;
                             }
                             else if (data2 == 0x33)
                             {
-                                printf("Terrain with water on the surface, slope S\n");
+                                //printf("Terrain with water on the surface, slope S\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_S;
                             }
                             else if (data2 == 0x34)
                             {
-                                printf("Terrain with water on the surface, slope W\n");
+                                //printf("Terrain with water on the surface, slope W\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_W;
                             }
                             else if (data2 == 0x35)
                             {
-                                printf("Terrain with water on the surface, slope N-E\n");
+                                //printf("Terrain with water on the surface, slope N-E\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_NE;
                             }
                             else if (data2 == 0x36)
                             {
-                                printf("Terrain with water on the surface, slope S-E\n");
+                                //printf("Terrain with water on the surface, slope S-E\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_SE;
                             }
                             else if (data2 == 0x37)
                             {
-                                printf("Terrain with water on the surface, slope S-W\n");
+                                //printf("Terrain with water on the surface, slope S-W\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_SW;
                             }
                             else if (data2 == 0x38)
                             {
-                                printf("Terrain with water on the surface, slope N-W\n");
+                                //printf("Terrain with water on the surface, slope N-W\n");
                                 tileType = ETT_SURFACE_WATER_SLOPE_NW;
                             }
                             else if (data2 == 0x39)
                             {
-                                printf("Terrain with water on the surface, corner N-E\n");
+                                //printf("Terrain with water on the surface, corner N-E\n");
                                 tileType = ETT_SURFACE_WATER_CORNER_NE;
                             }
                             else if (data2 == 0x3a)
                             {
-                                printf("Terrain with water on the surface, corner S-E\n");
+                                //printf("Terrain with water on the surface, corner S-E\n");
                                 tileType = ETT_SURFACE_WATER_CORNER_SE;
                             }
                             else if (data2 == 0x3b)
                             {
-                                printf("Terrain with water on the surface, corner S-W\n");
+                                //printf("Terrain with water on the surface, corner S-W\n");
                                 tileType = ETT_SURFACE_WATER_CORNER_SW;
                             }
                             else if (data2 == 0x3c)
                             {
-                                printf("Terrain with water on the surface, corner N-W\n");
+                                //printf("Terrain with water on the surface, corner N-W\n");
                                 tileType = ETT_SURFACE_WATER_CORNER_NW;
                             }
                             else if (data2 == 0x3d)
                             {
-                                printf("Terrain with water on the surface\n");
+                                //printf("Terrain with water on the surface\n");
                                 tileType = ETT_SURFACE_WATER_HIGHGROUND;
                             }
                             else

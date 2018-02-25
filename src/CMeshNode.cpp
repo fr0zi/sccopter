@@ -2,7 +2,7 @@
 
 
 CMeshNode::CMeshNode(CNode* parent, vbcString name)
-	: CNode(parent, name)
+: CNode(parent, name)
 {
 
 }

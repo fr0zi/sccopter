@@ -168,7 +168,7 @@ void CNode::setTransform(vbTransform transform)
 }
 
 
-vbTransform CNode::getTransform()
+vbTransform& CNode::getTransform()
 {
 	return m_Transform;
 }

@@ -72,7 +72,7 @@ class CNode : virtual public CRefCounter
         virtual void setTransform(vbTransform transform);
 
         //! Get node transform
-		virtual vbTransform getTransform();
+		virtual vbTransform& getTransform();
 
 
     protected:

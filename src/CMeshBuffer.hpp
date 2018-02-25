@@ -36,11 +36,11 @@ public:
 
 
 private:
-	S3DVertex*	m_Vertices;
+	S3DVertex*	    m_Vertices;
 
-	SMaterial m_Material;
-	unsigned int m_QuantumOfVertices;
-	GLuint m_VertexBufferID;
+	SMaterial       m_Material;
+	unsigned int    m_QuantumOfVertices;
+	GLuint          m_VertexBufferID;
 };
 
 #endif // __CMESHBUFFER_HPP__

@@ -9,6 +9,7 @@
 #include "CSC2MapLoader.hpp"
 #include "CTerrainNode.hpp"
 
+
 const int WINDOW_WIDTH = 1024;
 const int WINDOW_HEIGHT = 768;
 const float ROT_SPEED = 20.0f;
@@ -37,22 +38,12 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode, int act
 
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS )
 	{
-		//bool state = busNode->getIsActive();
 
-		//busNode->setIsActive(!state);
-
-        //if (node1)
-        //    node1->setParent(busNode);
 	}
 
 	if (key == GLFW_KEY_2 && action == GLFW_PRESS )
 	{
-		//bool state = node1->getIsActive();
 
-		//node1->setIsActive(!state);
-
-        //if (node1)
-		//    node1->setParent(director);
 	}
 }
 
@@ -155,14 +146,6 @@ GLFWwindow* createWindow(GLuint width, GLuint height, GLuint xPos = 0, GLuint yP
 
 int main(int argc, char* argv[])
 {
-/*
-	if(argc < 3)
-	{
-		printf("You must specify model name and texture path as parameter.\n");
-		return 1;
-	}
-*/
-
 	// Creating OpenGL window
 	GLFWwindow* win	= createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, 100, 100);
 
@@ -179,18 +162,19 @@ int main(int argc, char* argv[])
 
 	// Camera
 	camFPS = new CCameraFPS;
-	camFPS->setMoveSpeed(45.0f);
+	camFPS->setMoveSpeed(95.0f);
 
 	camFPS->setWindowDimensions(WINDOW_WIDTH, WINDOW_HEIGHT);
-	camFPS->setPosition(0, 200, 15);
+	camFPS->setPosition(0, 200, 0);
     camFPS->setFarValue(2000);
 
 	// Scene Manager
 	director = new CDirector("Director");
     director->setActiveCamera(camFPS);
 
-	//CSC2MapLoader* sc2l = new CSC2MapLoader("MYCITY.SC2");
+	//CSC2MapLoader* sc2l = new CSC2MapLoader("WODA.SC2");
 	CSC2MapLoader* sc2l = new CSC2MapLoader("calebopo.sc2");
+	//CSC2MapLoader* sc2l = new CSC2MapLoader("LAKELAND.SC2");
 
 	// Setting game state to RUN
 	EGameState = EGS_RUN;
@@ -200,13 +184,8 @@ int main(int argc, char* argv[])
 	lastTime = oldTime = glfwGetTime();
  	int nbFrames = 0;
 
- 	//int* tiles = sc2l->getTilesData();
-
-    //CTerrainNode* terr = new CTerrainNode(0, "SC2 Terrain", sc2l->getTilesData());
-
     director->addTerrainNode(0, "SC2 Terrain", sc2l->getTiles());
 
-    //terr->drop();
 
 	// Main loop
 	while( EGameState == EGS_RUN && !glfwWindowShouldClose(win) )
