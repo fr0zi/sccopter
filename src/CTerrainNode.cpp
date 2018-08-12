@@ -25,14 +25,14 @@ CTerrainNode::~CTerrainNode()
 void CTerrainNode::generateTerrainMesh(Tile* tiles)
 {
     const int TILES = 128;
-    const char VERTEX_COUNT = 9;
+    //const char VERTEX_COUNT = 9;
 
     //S3DVertex* vertices = new S3DVertex[TILES * TILES * VERTEX_COUNT];
 
 
 
-    float tileSize = 10.0f;
-    float heightScale = 0.05f;
+    //float tileSize = 10.0f;
+    //float heightScale = 0.05f;
 
     /*
  	for (int i = 0; i < TILES; i++)

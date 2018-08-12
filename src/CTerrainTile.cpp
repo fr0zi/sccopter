@@ -1,7 +1,7 @@
 #include "CTerrainTile.hpp"
 
 CTerrainTile::CTerrainTile(unsigned char x, unsigned char y, int height, TileType type)
-: _x(x), _y(y), _height(height), _type(type), _vertexCount(0)
+: _vertexCount(0), _type(type), _height(height), _x(x), _y(y)
 {
     generateMesh();
 }
@@ -57,7 +57,7 @@ void CTerrainTile::generateMesh()
     const float FLAT = _height * heightScale;
 
 
-    if ( ETT_FLAT == _type )
+    if ( ETT_FLAT == _type || ETT_UNDERWATER_FLAT == _type )
     {
         _vertexCount = 6;
         _vertices = new S3DVertex[_vertexCount];
@@ -515,6 +515,115 @@ void CTerrainTile::generateMesh()
         _vertices[11].coord[1] = FLAT;
         _vertices[11].coord[2] = BOTTOM_Y;
     }
+    if ( ETT_SLOPE_SE == _type )
+    {
+        _vertexCount = 24;
+        _vertices = new S3DVertex[_vertexCount];
+
+        // triangle 1
+        _vertices[0].coord[0] = LEFT_X;
+        _vertices[0].coord[1] = RISEN;
+        _vertices[0].coord[2] = BOTTOM_Y;
+
+        _vertices[1].coord[0] = RIGHT_X;
+        _vertices[1].coord[1] = RISEN;
+        _vertices[1].coord[2] = BOTTOM_Y;
+
+        _vertices[2].coord[0] = RIGHT_X;
+        _vertices[2].coord[1] = RISEN;
+        _vertices[2].coord[2] = TOP_Y;
+
+        // triangle 2
+        _vertices[3].coord[0] = LEFT_X;
+        _vertices[3].coord[1] = RISEN;
+        _vertices[3].coord[2] = BOTTOM_Y;
+
+        _vertices[4].coord[0] = RIGHT_X;
+        _vertices[4].coord[1] = RISEN;
+        _vertices[4].coord[2] = TOP_Y;
+
+        _vertices[5].coord[0] = LEFT_X;
+        _vertices[5].coord[1] = FLAT;
+        _vertices[5].coord[2] = TOP_Y;
+
+        // triangle 3
+        _vertices[6].coord[0] = LEFT_X;
+        _vertices[6].coord[1] = FLAT;
+        _vertices[6].coord[2] = BOTTOM_Y;
+
+        _vertices[7].coord[0] = LEFT_X;
+        _vertices[7].coord[1] = RISEN;
+        _vertices[7].coord[2] = BOTTOM_Y;
+
+        _vertices[8].coord[0] = LEFT_X;
+        _vertices[8].coord[1] = FLAT;
+        _vertices[8].coord[2] = TOP_Y;
+
+        // triangle 4
+        _vertices[9].coord[0] = LEFT_X;
+        _vertices[9].coord[1] = FLAT;
+        _vertices[9].coord[2] = TOP_Y;
+
+        _vertices[10].coord[0] = RIGHT_X;
+        _vertices[10].coord[1] = RISEN;
+        _vertices[10].coord[2] = TOP_Y;
+
+        _vertices[11].coord[0] = RIGHT_X;
+        _vertices[11].coord[1] = FLAT;
+        _vertices[11].coord[2] = TOP_Y;
+
+        // triangle 5
+        _vertices[12].coord[0] = RIGHT_X;
+        _vertices[12].coord[1] = RISEN;
+        _vertices[12].coord[2] = TOP_Y;
+
+        _vertices[13].coord[0] = RIGHT_X;
+        _vertices[13].coord[1] = RISEN;
+        _vertices[13].coord[2] = BOTTOM_Y;
+
+        _vertices[14].coord[0] = RIGHT_X;
+        _vertices[14].coord[1] = FLAT;
+        _vertices[14].coord[2] = BOTTOM_Y;
+
+        // triangle 6
+        _vertices[15].coord[0] = RIGHT_X;
+        _vertices[15].coord[1] = FLAT;
+        _vertices[15].coord[2] = BOTTOM_Y;
+
+        _vertices[16].coord[0] = RIGHT_X;
+        _vertices[16].coord[1] = FLAT;
+        _vertices[16].coord[2] = TOP_Y;
+
+        _vertices[17].coord[0] = RIGHT_X;
+        _vertices[17].coord[1] = RISEN;
+        _vertices[17].coord[2] = TOP_Y;
+
+        // triangle 7
+        _vertices[18].coord[0] = RIGHT_X;
+        _vertices[18].coord[1] = RISEN;
+        _vertices[18].coord[2] = BOTTOM_Y;
+
+        _vertices[19].coord[0] = LEFT_X;
+        _vertices[19].coord[1] = RISEN;
+        _vertices[19].coord[2] = BOTTOM_Y;
+
+        _vertices[20].coord[0] = LEFT_X;
+        _vertices[20].coord[1] = FLAT;
+        _vertices[20].coord[2] = BOTTOM_Y;
+
+        // triangle 8
+        _vertices[21].coord[0] = LEFT_X;
+        _vertices[21].coord[1] = FLAT;
+        _vertices[21].coord[2] = BOTTOM_Y;
+
+        _vertices[22].coord[0] = RIGHT_X;
+        _vertices[22].coord[1] = FLAT;
+        _vertices[22].coord[2] = BOTTOM_Y;
+
+        _vertices[23].coord[0] = RIGHT_X;
+        _vertices[23].coord[1] = RISEN;
+        _vertices[23].coord[2] = BOTTOM_Y;
+    }
 
     setTexture();
 }
@@ -911,12 +1020,113 @@ void CTerrainTile::setTexture()
     else
     if ( ETT_SLOPE_SE == _type )
     {
+        // triangle 1
+        _vertices[0].texcoord[0] = 0.5f;
+        _vertices[0].texcoord[1] = 0.5f;
 
+        _vertices[1].texcoord[0] = 1.0f;
+        _vertices[1].texcoord[1] = 0.5f;
+
+        _vertices[2].texcoord[0] = 1.0f;
+        _vertices[2].texcoord[1] = 0.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = 0.5f;
+        _vertices[3].texcoord[1] = 0.5f;
+
+        _vertices[4].texcoord[0] = 1.0f;
+        _vertices[4].texcoord[1] = 0.0f;
+
+        _vertices[5].texcoord[0] = 0.5f;
+        _vertices[5].texcoord[1] = 0.0f;
+
+        // triangle 3
+        _vertices[6].texcoord[0] = 0.5f;
+        _vertices[6].texcoord[1] = 0.5f;
+
+        _vertices[7].texcoord[0] = 0.5f;
+        _vertices[7].texcoord[1] = 0.0f;
+
+        _vertices[8].texcoord[0] = 0.0f;
+        _vertices[8].texcoord[1] = 0.5f;
+
+        // triangle 4
+        _vertices[9].texcoord[0] = 0.5f;
+        _vertices[9].texcoord[1] = 0.5f;
+
+        _vertices[10].texcoord[0] = 0.0f;
+        _vertices[10].texcoord[1] = 0.0f;
+
+        _vertices[11].texcoord[0] = 0.0f;
+        _vertices[11].texcoord[1] = 0.5f;
+
+        // triangle 5
+        _vertices[12].texcoord[0] = 0.5f;
+        _vertices[12].texcoord[1] = 0.0f;
+
+        _vertices[13].texcoord[0] = 0.0f;
+        _vertices[13].texcoord[1] = 0.0f;
+
+        _vertices[14].texcoord[0] = 0.0f;
+        _vertices[14].texcoord[1] = 0.5f;
+
+        // triangle 6
+        _vertices[15].texcoord[0] = 0.0f;
+        _vertices[15].texcoord[1] = 0.5f;
+
+        _vertices[16].texcoord[0] = 0.5f;
+        _vertices[16].texcoord[1] = 0.5f;
+
+        _vertices[17].texcoord[0] = 0.5f;
+        _vertices[17].texcoord[1] = 0.0f;
+
+        // triangle 7
+        _vertices[18].texcoord[0] = 0.5f;
+        _vertices[18].texcoord[1] = 0.0f;
+
+        _vertices[19].texcoord[0] = 0.0f;
+        _vertices[19].texcoord[1] = 0.0f;
+
+        _vertices[20].texcoord[0] = 0.0f;
+        _vertices[20].texcoord[1] = 0.5f;
+
+        // triangle 8
+        _vertices[21].texcoord[0] = 0.0f;
+        _vertices[21].texcoord[1] = 0.5f;
+
+        _vertices[22].texcoord[0] = 0.5f;
+        _vertices[22].texcoord[1] = 0.5f;
+
+        _vertices[23].texcoord[0] = 0.5f;
+        _vertices[23].texcoord[1] = 0.0f;
     }
     else
     if ( ETT_SLOPE_SW == _type )
     {
 
+    }
+    else
+    if ( ETT_UNDERWATER_FLAT == _type )
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = 0.5f;
+        _vertices[0].texcoord[1] = 0.5f;
+
+        _vertices[1].texcoord[0] = 0.0f;
+        _vertices[1].texcoord[1] = 1.0f;
+
+        _vertices[2].texcoord[0] = 0.5f;
+        _vertices[2].texcoord[1] = 1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = 0.5f;
+        _vertices[3].texcoord[1] = 0.5f;
+
+        _vertices[4].texcoord[0] = 0.0f;
+        _vertices[4].texcoord[1] = 0.5f;
+
+        _vertices[5].texcoord[0] = 0.0f;
+        _vertices[5].texcoord[1] = 1.0f;
     }
 }
 
