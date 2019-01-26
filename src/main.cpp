@@ -10,7 +10,7 @@
 #include "CTerrainNode.hpp"
 
 
-const int WINDOW_WIDTH = 1024;
+const int WINDOW_WIDTH = 1366;
 const int WINDOW_HEIGHT = 768;
 const float ROT_SPEED = 20.0f;
 
