@@ -77,11 +77,11 @@ void CSC2MapLoader::readMapData()
         printf("It is NOT correct SC2000 save game file!\n");
 
 
-    struct stat st;
-    fstat(_file->_file, &st);
+    //struct stat st;
+    //fstat(_file->_file, &st);
 
     // reading data chunks
-    while (ftell(_file) < st.st_size)
+    while (ftell (_file) < filelength (fileno (_file)))
     {
         fread(&_segHeader, sizeof(_segHeader), 1, _file);
 
