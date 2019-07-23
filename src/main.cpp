@@ -163,6 +163,7 @@ int main(int argc, char* argv[])
 	// Camera
 	camFPS = new CCameraFPS;
 	camFPS->setMoveSpeed(95.0f);
+	camFPS->setRotationSpeed(0.0015f);
 
 	camFPS->setWindowDimensions(WINDOW_WIDTH, WINDOW_HEIGHT);
 	camFPS->setPosition(0, 200, 0);

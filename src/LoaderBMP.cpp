@@ -18,16 +18,16 @@ unsigned char* loadBMP(vbcString filename)
     FILE * file = fopen(filename.c_str(),"rb");
     if (!file)
     {
-        printf("Image could not be opened\n"); 
+        printf("Image could not be opened\n");
         return 0;
     }
 
     // Read the header, i.e. the 54 first bytes
 
     // If less than 54 byes are read, problem
-    if ( fread(header, 1, 54, file)!=54 ){ 
+    if ( fread(header, 1, 54, file)!=54 ){
         printf("Not a correct BMP file\n");
-        return false;
+        return 0;
     }
 
     // A BMP files always begins with "BM"

@@ -108,16 +108,16 @@ enum TileType {
     ETT_FLAT, // 0x00
     ETT_SLOPE_N, // 0x01
     ETT_SLOPE_E, // 0x02
-    ETT_SLOPE_S,
-    ETT_SLOPE_W,
-    ETT_SLOPE_NE,
-    ETT_SLOPE_SE,
-    ETT_SLOPE_SW,
-    ETT_SLOPE_NW,
-    ETT_CORNER_NE,
-    ETT_CORNER_SE,
-    ETT_CORNER_SW,
-    ETT_CORNER_NW,
+    ETT_SLOPE_S, // 0x03
+    ETT_SLOPE_W, // 0x04
+    ETT_SLOPE_NE, // 0x05
+    ETT_SLOPE_SE, // 0x06
+    ETT_SLOPE_SW, // 0x07
+    ETT_SLOPE_NW, // 0x08
+    ETT_CORNER_NE, // 0x09
+    ETT_CORNER_SE, // 0x10
+    ETT_CORNER_SW, // 0x0
+    ETT_CORNER_NW, // 0x05
     ETT_HIGHGROUND,
     ETT_UNUSED_0E,
     ETT_UNUSED_0F,

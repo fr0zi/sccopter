@@ -22,6 +22,7 @@ class CCameraFPS : virtual public CStaticCamera
 
 		void setMoveSpeed(float speed);
 
+		//! Default rotation speed = 0.0005f
 		void setRotationSpeed(float speed);
 
 	protected:

@@ -289,7 +289,7 @@ void CSC2MapLoader::readMapData()
 
                     if (data <= 127)
                     {
-                        printf("Type 1: %d\n", data);
+                        //printf("Type 1: %d\n", data);
 
                         BYTE data2;
 
@@ -298,7 +298,7 @@ void CSC2MapLoader::readMapData()
                             fread(&data2, 1, sizeof(data2), _file);
                             loop++;
 
-                            printf("Data: %x - ", data2);
+                            //printf("Data: %x - ", data2);
 
                             if (data2 == 0x00)
                             {
@@ -373,6 +373,7 @@ void CSC2MapLoader::readMapData()
                             else if (data2 == 0x10)
                             {
                                 //printf("Water covered flat terrain\n");
+                                printf("&& Underwater Flat - %d\n", _tiles[totalTile]);
                                 _tiles[totalTile].type = ETT_UNDERWATER_FLAT;
                             }
                             else if (data2 == 0x11)
@@ -581,6 +582,11 @@ void CSC2MapLoader::readMapData()
                                 //printf("Terrain with water on the surface\n");
                                 _tiles[totalTile].type = ETT_SURFACE_WATER_HIGHGROUND;
                             }
+                            else if (data2 == 0x3e)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_WATERFALL;
+                            }
                             else
                                 printf("??\n");
 
@@ -592,17 +598,17 @@ void CSC2MapLoader::readMapData()
                     }
                     else if (data >= 129)
                     {
-                        printf("Type 2: %d\t", data);
+                        //printf("Type 2: %d\t", data);
 
                         int dataCount = data - 127;
-                        printf("Data count: %d\t", dataCount);
+                        //printf("Data count: %d\t", dataCount);
                         //totalTile += dataCount;
 
                         BYTE data2;
 
                         fread(&data2, 1, sizeof(data2), _file);
                         loop++;
-                        printf("Data: %x - ", data2);
+                        //printf("Data: %x - ", data2);
 
                         TileType tileType;
                         tileType = ETT_FLAT;
@@ -888,6 +894,11 @@ void CSC2MapLoader::readMapData()
                                 //printf("Terrain with water on the surface\n");
                                 tileType = ETT_SURFACE_WATER_HIGHGROUND;
                             }
+                            else if (data2 == 0x3e)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                tileType = ETT_WATERFALL;
+                            }
                             else
                                 printf("??\n");
 
@@ -907,8 +918,8 @@ void CSC2MapLoader::readMapData()
 
                 //}
 
-                printf("Total tiles: %d\n", totalTile);
-                printf("\n");
+                //printf("Total tiles: %d\n", totalTile);
+                //printf("\n");
 
                 //fseek(_file, ByteConversion(_segHeader.length), SEEK_CUR);
                 break;
