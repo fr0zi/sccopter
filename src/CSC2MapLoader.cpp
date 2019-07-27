@@ -55,6 +55,8 @@ void CSC2MapLoader::readMapData()
 {
     _tiles = new Tile[TILES_COUNT];
 
+    WORD sea_level = 0;
+
     fread(&_segHeader, sizeof(_segHeader), 1, _file);
 
     printf("Chunk: %x\n", _segHeader.name);
@@ -586,6 +588,41 @@ void CSC2MapLoader::readMapData()
                             {
                                 //printf("Terrain with water on the surface\n");
                                 _tiles[totalTile].type = ETT_WATERFALL;
+                            }
+                            else if (data2 == 0x3f)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_UNUSED_3F;
+                            }
+                            else if (data2 == 0x40)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_SURFACE_WATER_CANAL_WE;
+                            }
+                            else if (data2 == 0x41)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_SURFACE_WATER_CANAL_NS;
+                            }
+                            else if (data2 == 0x42)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_SURFACE_BAY_OPEN_S;
+                            }
+                            else if (data2 == 0x43)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_SURFACE_BAY_OPEN_W;
+                            }
+                            else if (data2 == 0x44)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_SURFACE_BAY_OPEN_N;
+                            }
+                            else if (data2 == 0x45)
+                            {
+                                //printf("Terrain with water on the surface\n");
+                                _tiles[totalTile].type = ETT_SURFACE_BAY_OPEN_E;
                             }
                             else
                                 printf("??\n");

@@ -13,6 +13,12 @@ enum TextureType {
     SubmergedSE
 };
 
+enum TextureUV {
+    U_Min,
+    U_Max,
+    V_Min,
+    V_Max
+};
 
 class CTerrainTile
 {
