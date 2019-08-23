@@ -1,15 +1,17 @@
 #include "CTerrainNode.hpp"
 
-CTerrainNode::CTerrainNode(CNode* parent, CWarehouser* warehouser, vbcString name, Tile* tiles)
+CTerrainNode::CTerrainNode(CNode* parent, CWarehouser* warehouser, vbcString name, Tile* tiles, int seaLevel)
 : _Warehouser(warehouser),
     CNode(parent, name)
 {
     _Warehouser->grab();
 
+    _seaLevel = seaLevel;
+
     if (tiles)
         generateTerrainMesh(tiles);
 
-
+    //printf("Terrain Node: Sea level: %d\n", _seaLevel);
 }
 
 
@@ -20,7 +22,6 @@ CTerrainNode::~CTerrainNode()
 
     _Warehouser->drop();
 }
-
 
 void CTerrainNode::generateTerrainMesh(Tile* tiles)
 {
@@ -38,11 +39,34 @@ void CTerrainNode::generateTerrainMesh(Tile* tiles)
    0,1-----1,1
     */
 
+    int currentHeight = 0;
 
     for (int y = 0; y < TILES; ++y)
         for (int x = 0; x < TILES; ++x)
         {
-            CTerrainTile* tile = new CTerrainTile(x, y, tiles[y * 128 + x].height, tiles[y * 128 + x].type);
+            //currentHeight = tiles[y * 128 + x].height;
+
+            if (tiles[y * 128 + x].type >= 0x10 && tiles[y * 128 + x].type <= 0x20)
+            {
+                //printf("Sea level: %d\t", _seaLevel);
+                currentHeight = _seaLevel;
+            }
+            else
+                currentHeight = tiles[y * 128 + x].height;
+                //printf("Type: %x\t", tiles[y * 128 + x].type);
+            /*
+            TileType currentTileType = tiles[y * 128 + x].type;
+            if (( (int)tiles[y * 128 + x].type >= ETT_UNDERWATER_FLAT) && ((int)tiles[y * 128 + x].type < ETT_WATER_SUBMERGED_HIGHGROUND))
+            {
+                currentHeight = _seaLevel;
+                printf("Terrain Node: Current height: %d\n", currentHeight);
+            }
+            else
+            {
+                currentHeight = tiles[y * 128 + x].height;
+            }
+            */
+            CTerrainTile* tile = new CTerrainTile(x, y, currentHeight, tiles[y * 128 + x].type);
 
             // chwilowy workaround na czas zaimplementowania wszystkich rodzajow kafli terenu
             // jesli utworzony tile zwroci 0 vertexow, to znaczy ze jeszcze nie ma implementacji danego typu i mozna go usunac

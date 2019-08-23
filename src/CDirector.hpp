@@ -69,14 +69,14 @@ class CDirector : virtual public CNode
 			return node;
 		}
 
-        CTerrainNode* addTerrainNode(CNode* parent = 0, vbcString name = "SC2 Terrain", Tile* tiles = 0)
+        CTerrainNode* addTerrainNode(CNode* parent = 0, vbcString name = "SC2 Terrain", Tile* tiles = 0, int seaLevel = 0)
         {
             CTerrainNode* node;
 
             if (parent != 0)
-                node = new CTerrainNode(parent, m_Warehouser, name, tiles);
+                node = new CTerrainNode(parent, m_Warehouser, name, tiles, seaLevel);
             else
-                node = new CTerrainNode(this, m_Warehouser, name, tiles);
+                node = new CTerrainNode(this, m_Warehouser, name, tiles, seaLevel);
 
             node->setShaderID(m_Warehouser->loadShader("road.shdr"));
 

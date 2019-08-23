@@ -167,14 +167,14 @@ enum TileType {
     ETT_SURFACE_WATER_CORNER_SW,
     ETT_SURFACE_WATER_CORNER_NW,
     ETT_SURFACE_WATER_HIGHGROUND,
+    ETT_WATERFALL,
+    ETT_UNUSED_3F,
     ETT_SURFACE_WATER_CANAL_WE,
     ETT_SURFACE_WATER_CANAL_NS,
     ETT_SURFACE_WATER_BAY_OPEN_S,
     ETT_SURFACE_WATER_BAY_OPEN_W,
     ETT_SURFACE_WATER_BAY_OPEN_N,
-    ETT_SURFACE_WATER_BAY_OPEN_E,
-    ETT_WATERFALL,
-    ETT_UNUSED_3F
+    ETT_SURFACE_WATER_BAY_OPEN_E
 };
 
 struct segHeader {
@@ -197,14 +197,17 @@ class CSC2MapLoader : public CRefCounter
         //int* getTilesData();
 
         Tile* getTiles();
+        int getSeaLevel() { return _seaLevel; }
 
     private:
         FILE*       _file;
         segHeader   _segHeader;
         //int*        _tileHeight;
         Tile*        _tiles;
+        int          _seaLevel;
 
         void readMapData();
+        void calculateSeaLevel();
 };
 
 

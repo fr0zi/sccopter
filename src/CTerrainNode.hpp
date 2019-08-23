@@ -16,7 +16,7 @@ typedef std::vector<CTerrainTile*> TileList;
 class CTerrainNode : virtual public CMeshNode
 {
     public:
-        CTerrainNode(CNode* parent = 0, CWarehouser* warehouser = 0, vbcString name = "SC2 Terrain", Tile* tiles = 0);
+        CTerrainNode(CNode* parent = 0, CWarehouser* warehouser = 0, vbcString name = "SC2 Terrain", Tile* tiles = 0, int seaLevel = 0);
         virtual ~CTerrainNode();
 
         void render(ERenderPass pass);
@@ -29,6 +29,7 @@ class CTerrainNode : virtual public CMeshNode
         CWarehouser* _Warehouser;
 
         TileList    _tiles;
+        int         _seaLevel;
 };
 
 #endif //__CTERRAINNODE_HPP__

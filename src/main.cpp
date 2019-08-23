@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <memory>
 
 #include "Includes.hpp"
 #include "CCameraFPS.hpp"
@@ -177,6 +178,8 @@ int main(int argc, char* argv[])
 	CSC2MapLoader* sc2l = new CSC2MapLoader("calebopo.sc2");
 	//CSC2MapLoader* sc2l = new CSC2MapLoader("LAKELAND.SC2");
 
+	printf("Sea level: %d\n", sc2l->getSeaLevel());
+
 	// Setting game state to RUN
 	EGameState = EGS_RUN;
 
@@ -185,8 +188,7 @@ int main(int argc, char* argv[])
 	lastTime = oldTime = glfwGetTime();
  	int nbFrames = 0;
 
-    director->addTerrainNode(0, "SC2 Terrain", sc2l->getTiles());
-
+    director->addTerrainNode(0, "SC2 Terrain", sc2l->getTiles(), sc2l->getSeaLevel());
 
 	// Main loop
 	while( EGameState == EGS_RUN && !glfwWindowShouldClose(win) )
