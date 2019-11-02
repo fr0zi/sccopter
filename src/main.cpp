@@ -11,9 +11,10 @@
 #include "CTerrainNode.hpp"
 
 
-const int WINDOW_WIDTH = 1366;
-const int WINDOW_HEIGHT = 768;
+const int WINDOW_WIDTH = 1920;
+const int WINDOW_HEIGHT = 1080;
 const float ROT_SPEED = 20.0f;
+const float START_VIEW_ANGLE = 45.0f;
 
 CCameraFPS* camFPS = 0;
 CDirector*  director = 0;
@@ -24,7 +25,7 @@ enum _EGameState {
 	EGS_QUIT
 } EGameState;
 
-std::string windowTitle = "Virtual Bus Core++";
+std::string windowTitle = "SC Copter Prototype";
 
 
 
@@ -48,6 +49,11 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode, int act
 	}
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    printf("Mouse X: %f, Y: %f\n", xoffset, yoffset);
+    camFPS->setViewAngle(camFPS->getViewAngle() + yoffset);
+}
 
 void readInput(GLFWwindow* window, double deltaTime)
 {
@@ -153,10 +159,12 @@ int main(int argc, char* argv[])
 	glfwSetWindowTitle(win, "SC Copter Prototype");
 
 	glfwSetKeyCallback(win, keyboard_callback);
+	glfwSetScrollCallback(win, scroll_callback);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
+
 
 
 	// CREATING OBJECTS
@@ -233,7 +241,7 @@ int main(int argc, char* argv[])
 		}
 
 		// Rendering
-		glClearColor(0.3, 0.6, 0.95, 1.0);
+		glClearColor(0.0, 0.2, 0.3, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             director->renderScene();

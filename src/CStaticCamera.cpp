@@ -57,6 +57,10 @@ glm::mat4 CStaticCamera::getViewMatrix()
 	return m_ViewMatrix;
 }
 
+GLfloat CStaticCamera::getViewAngle()
+{
+    return m_ViewAngle;
+}
 
 void CStaticCamera::setPosition(vec3 position)
 {
@@ -85,7 +89,7 @@ void CStaticCamera::lookAt(vec3 lookAt)
 void CStaticCamera::setUpVector(vec3 upVector)
 {
 	m_UpVector = upVector;
-	
+
 	updateView();
 }
 

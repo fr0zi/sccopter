@@ -28,6 +28,8 @@ class CStaticCamera : virtual public CRefCounter
 
 		glm::mat4 getViewMatrix();
 
+		GLfloat getViewAngle();
+
 		void setPosition(vec3 position);
 
 		void setPosition(GLfloat x, GLfloat y, GLfloat z);

@@ -57,7 +57,7 @@ void CTerrainTile::generateMesh()
 
 
     if ( ETT_FLAT == _type || ETT_UNDERWATER_FLAT == _type || ETT_UNDERWATER_HIGHGROUND == _type
-        || ETT_SURFACE_WATER_HIGHGROUND == _type
+        || ETT_SURFACE_WATER_HIGHGROUND == _type || ETT_SURFACE_WATER_FLAT == _type
         || ETT_SURFACE_WATER_SLOPE_N == _type || ETT_SURFACE_WATER_SLOPE_S == _type
         || ETT_SURFACE_WATER_SLOPE_E == _type || ETT_SURFACE_WATER_SLOPE_W == _type
         || ETT_SURFACE_WATER_SLOPE_NE == _type || ETT_SURFACE_WATER_SLOPE_SE == _type
@@ -112,7 +112,8 @@ void CTerrainTile::generateMesh()
         || ETT_WATER_SUBMERGED_SLOPE_NW == _type || ETT_WATER_SUBMERGED_SLOPE_SE == _type
         || ETT_WATER_SUBMERGED_SLOPE_N == _type || ETT_WATER_SUBMERGED_SLOPE_S == _type
         || ETT_WATER_SUBMERGED_SLOPE_E == _type || ETT_WATER_SUBMERGED_SLOPE_W == _type
-        //|| ETT_WATER_SUBMERGED_CORNER_NE == _type
+        || ETT_WATER_SUBMERGED_CORNER_NE == _type || ETT_WATER_SUBMERGED_CORNER_NW == _type
+        || ETT_WATER_SUBMERGED_CORNER_SW == _type || ETT_WATER_SUBMERGED_CORNER_SE == _type
         )
     {
         _vertexCount = 6;
@@ -1376,6 +1377,11 @@ void CTerrainTile::setTexture()
         0.25f, 0.5f
         };
 
+    const float TEX_SUBMERGED_CORNER[8] = {
+        0.25f, 0.5f,
+        0.5f, 0.75f
+        };
+
     if ( ETT_FLAT == _type )
     {
         _vertices[0].texcoord[0] = TEX_SURFACE[U_Max]; //1
@@ -2412,7 +2418,7 @@ void CTerrainTile::setTexture()
         _vertices[29].texcoord[1] = TEX_RAW_DIRT[V_Max];//0.5f;
     }
     else
-    if ( ETT_UNDERWATER_FLAT == _type
+    if ( ETT_UNDERWATER_FLAT == _type || ETT_UNDERWATER_HIGHGROUND == _type
         || ETT_SURFACE_WATER_SLOPE_N == _type || ETT_SURFACE_WATER_SLOPE_S == _type
         || ETT_SURFACE_WATER_SLOPE_E == _type || ETT_SURFACE_WATER_SLOPE_W == _type
         || ETT_SURFACE_WATER_SLOPE_NE == _type || ETT_SURFACE_WATER_SLOPE_NW == _type
@@ -2574,30 +2580,30 @@ void CTerrainTile::setTexture()
         _vertices[29].texcoord[1] = TEX_WATERFALL[V_Max];//0.5f;
     }
     else
-    if (ETT_SURFACE_WATER_HIGHGROUND == _type)
+    if ( ETT_SURFACE_WATER_CANAL_NS == _type )
     {
         // triangle 1
-        _vertices[0].texcoord[0] = TEX_WATER[U_Max];//0.5f;
-        _vertices[0].texcoord[1] = TEX_WATER[V_Min];//0.5f;
+        _vertices[0].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.5f;
+        _vertices[0].texcoord[1] = TEX_WATER_CANAL[V_Max];//0.5f;
 
-        _vertices[1].texcoord[0] = TEX_WATER[U_Min];//0.0f;
-        _vertices[1].texcoord[1] = TEX_WATER[V_Min];//1.0f;
+        _vertices[1].texcoord[0] = TEX_WATER_CANAL[U_Min];//0.0f;
+        _vertices[1].texcoord[1] = TEX_WATER_CANAL[V_Min];//1.0f;
 
-        _vertices[2].texcoord[0] = TEX_WATER[U_Max];//0.5f;
-        _vertices[2].texcoord[1] = TEX_WATER[V_Max];//1.0f;
+        _vertices[2].texcoord[0] = TEX_WATER_CANAL[U_Min];//0.5f;
+        _vertices[2].texcoord[1] = TEX_WATER_CANAL[V_Max];//1.0f;
 
         // triangle 2
-        _vertices[3].texcoord[0] = TEX_WATER[U_Max];//0.5f;
-        _vertices[3].texcoord[1] = TEX_WATER[V_Min];//0.5f;
+        _vertices[3].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.5f;
+        _vertices[3].texcoord[1] = TEX_WATER_CANAL[V_Max];//0.5f;
 
-        _vertices[4].texcoord[0] = TEX_WATER[U_Min];//0.0f;
-        _vertices[4].texcoord[1] = TEX_WATER[V_Min];//0.5f;
+        _vertices[4].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.0f;
+        _vertices[4].texcoord[1] = TEX_WATER_CANAL[V_Min];//0.5f;
 
-        _vertices[5].texcoord[0] = TEX_WATER[U_Min];//0.0f;
-        _vertices[5].texcoord[1] = TEX_WATER[V_Max];//1.0f
+        _vertices[5].texcoord[0] = TEX_WATER_CANAL[U_Min];//0.0f;
+        _vertices[5].texcoord[1] = TEX_WATER_CANAL[V_Min];//1.0f
     }
-    else // TODO Fix UV mappings
-    if ( ETT_SURFACE_WATER_CANAL_NS == _type /* || ETT_SURFACE_WATER_CANAL_WE == _type */ )
+    else
+    if ( ETT_SURFACE_WATER_CANAL_WE == _type )
     {
         // triangle 1
         _vertices[0].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.5f;
@@ -2620,38 +2626,60 @@ void CTerrainTile::setTexture()
         _vertices[5].texcoord[1] = TEX_WATER_CANAL[V_Max];//1.0f
     }
     else // TODO Fix UV mappings
-    if ( /*ETT_SURFACE_WATER_CANAL_NS == _type || */ ETT_SURFACE_WATER_CANAL_WE == _type )
+    if ( ETT_SURFACE_WATER_BAY_OPEN_S == _type )
     {
         // triangle 1
-        _vertices[0].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.5f;
-        _vertices[0].texcoord[1] = TEX_WATER_CANAL[V_Min];//0.5f;
+        _vertices[0].texcoord[0] = TEX_WATER_BAY[U_Max];//0.5f;
+        _vertices[0].texcoord[1] = TEX_WATER_BAY[V_Max];//0.5f;
 
-        _vertices[1].texcoord[0] = 2.0f;//TEX_WATER_CANAL[U_Min];//0.0f;
-        _vertices[1].texcoord[1] = TEX_WATER_CANAL[V_Max];//1.0f;
+        _vertices[1].texcoord[0] = TEX_WATER_BAY[U_Min];//0.0f;
+        _vertices[1].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f;
 
-        _vertices[2].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.5f;
-        _vertices[2].texcoord[1] = TEX_WATER_CANAL[V_Max];//1.0f;
+        _vertices[2].texcoord[0] = TEX_WATER_BAY[U_Min];//0.5f;
+        _vertices[2].texcoord[1] = TEX_WATER_BAY[V_Max];//1.0f;
 
         // triangle 2
-        _vertices[3].texcoord[0] = TEX_WATER_CANAL[U_Max];//0.5f;
-        _vertices[3].texcoord[1] = TEX_WATER_CANAL[V_Min];//0.5f;
+        _vertices[3].texcoord[0] = TEX_WATER_BAY[U_Max];//0.5f;
+        _vertices[3].texcoord[1] = TEX_WATER_BAY[V_Max];//0.5f;
 
-        _vertices[4].texcoord[0] = TEX_WATER_CANAL[U_Min];//0.0f;
-        _vertices[4].texcoord[1] = TEX_WATER_CANAL[V_Min];//0.5f;
+        _vertices[4].texcoord[0] = TEX_WATER_BAY[U_Max];//0.0f;
+        _vertices[4].texcoord[1] = TEX_WATER_BAY[V_Min];//0.5f;
 
-        _vertices[5].texcoord[0] = TEX_WATER_CANAL[U_Min];//0.0f;
-        _vertices[5].texcoord[1] = TEX_WATER_CANAL[V_Max];//1.0f
+        _vertices[5].texcoord[0] = TEX_WATER_BAY[U_Min];//0.0f;
+        _vertices[5].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f
     }
-    else // TODO Fix UV mappings
-    if ( ETT_SURFACE_WATER_BAY_OPEN_N == _type || ETT_SURFACE_WATER_BAY_OPEN_S == _type
-        || ETT_SURFACE_WATER_BAY_OPEN_S == _type || ETT_SURFACE_WATER_BAY_OPEN_W == _type )
+    else
+    if ( ETT_SURFACE_WATER_BAY_OPEN_N == _type )
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_WATER_BAY[U_Min];//0.5f;
+        _vertices[0].texcoord[1] = TEX_WATER_BAY[V_Min];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_WATER_BAY[U_Max];//0.0f;
+        _vertices[1].texcoord[1] = TEX_WATER_BAY[V_Max];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_WATER_BAY[U_Max];//0.5f;
+        _vertices[2].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_WATER_BAY[U_Min];//0.5f;
+        _vertices[3].texcoord[1] = TEX_WATER_BAY[V_Min];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_WATER_BAY[U_Min];//0.0f;
+        _vertices[4].texcoord[1] = TEX_WATER_BAY[V_Max];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_WATER_BAY[U_Max];//0.0f;
+        _vertices[5].texcoord[1] = TEX_WATER_BAY[V_Max];//1.0f
+    }
+    else
+    if ( ETT_SURFACE_WATER_BAY_OPEN_W == _type )
     {
         // triangle 1
         _vertices[0].texcoord[0] = TEX_WATER_BAY[U_Max];//0.5f;
         _vertices[0].texcoord[1] = TEX_WATER_BAY[V_Min];//0.5f;
 
         _vertices[1].texcoord[0] = TEX_WATER_BAY[U_Min];//0.0f;
-        _vertices[1].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f;
+        _vertices[1].texcoord[1] = TEX_WATER_BAY[V_Max];//1.0f;
 
         _vertices[2].texcoord[0] = TEX_WATER_BAY[U_Max];//0.5f;
         _vertices[2].texcoord[1] = TEX_WATER_BAY[V_Max];//1.0f;
@@ -2660,10 +2688,148 @@ void CTerrainTile::setTexture()
         _vertices[3].texcoord[0] = TEX_WATER_BAY[U_Max];//0.5f;
         _vertices[3].texcoord[1] = TEX_WATER_BAY[V_Min];//0.5f;
 
-        _vertices[4].texcoord[0] = 2.0;//TEX_WATER_BAY[U_Min];//0.0f;
+        _vertices[4].texcoord[0] = TEX_WATER_BAY[U_Min];//0.0f;
         _vertices[4].texcoord[1] = TEX_WATER_BAY[V_Min];//0.5f;
 
         _vertices[5].texcoord[0] = TEX_WATER_BAY[U_Min];//0.0f;
         _vertices[5].texcoord[1] = TEX_WATER_BAY[V_Max];//1.0f
+    }
+    else
+    if ( ETT_SURFACE_WATER_BAY_OPEN_E == _type )
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_WATER_BAY[U_Min];//0.5f;
+        _vertices[0].texcoord[1] = TEX_WATER_BAY[V_Max];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_WATER_BAY[U_Max];//0.0f;
+        _vertices[1].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_WATER_BAY[U_Min];//0.5f;
+        _vertices[2].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_WATER_BAY[U_Min];//0.5f;
+        _vertices[3].texcoord[1] = TEX_WATER_BAY[V_Max];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_WATER_BAY[U_Max];//0.0f;
+        _vertices[4].texcoord[1] = TEX_WATER_BAY[V_Max];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_WATER_BAY[U_Max];//0.0f;
+        _vertices[5].texcoord[1] = TEX_WATER_BAY[V_Min];//1.0f
+    }
+    else
+    if (ETT_WATER_SUBMERGED_CORNER_NE == _type || ETT_SURFACE_WATER_CORNER_NE == _type)
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.5f;
+        _vertices[0].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.0f;
+        _vertices[1].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.5f;
+        _vertices[2].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.5f;
+        _vertices[3].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.0f;
+        _vertices[4].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.0f;
+        _vertices[5].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//1.0f;
+    }
+    else
+    if (ETT_WATER_SUBMERGED_CORNER_NW == _type || ETT_SURFACE_WATER_CORNER_NW == _type)
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.5f;
+        _vertices[0].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.0f;
+        _vertices[1].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.5f;
+        _vertices[2].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.5f;
+        _vertices[3].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.0f;
+        _vertices[4].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.0f;
+        _vertices[5].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//1.0f;
+    }
+    else
+    if (ETT_WATER_SUBMERGED_CORNER_SW == _type || ETT_SURFACE_WATER_CORNER_SW == _type)
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.5f;
+        _vertices[0].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.0f;
+        _vertices[1].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.5f;
+        _vertices[2].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.5f;
+        _vertices[3].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.0f;
+        _vertices[4].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.0f;
+        _vertices[5].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//1.0f;
+    }
+    else
+    if (ETT_WATER_SUBMERGED_CORNER_SE == _type || ETT_SURFACE_WATER_CORNER_SE == _type)
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.5f;
+        _vertices[0].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.0f;
+        _vertices[1].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.5f;
+        _vertices[2].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.5f;
+        _vertices[3].texcoord[1] = TEX_SUBMERGED_CORNER[V_Min];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_SUBMERGED_CORNER[U_Min];//0.0f;
+        _vertices[4].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_SUBMERGED_CORNER[U_Max];//0.0f;
+        _vertices[5].texcoord[1] = TEX_SUBMERGED_CORNER[V_Max];//1.0f;
+    }
+    else
+    if (ETT_SURFACE_WATER_FLAT == _type)
+    {
+        // triangle 1
+        _vertices[0].texcoord[0] = TEX_WATER_SURFACE[U_Max];//0.5f;
+        _vertices[0].texcoord[1] = TEX_WATER_SURFACE[V_Min];//0.5f;
+
+        _vertices[1].texcoord[0] = TEX_WATER_SURFACE[U_Min];//0.0f;
+        _vertices[1].texcoord[1] = TEX_WATER_SURFACE[V_Max];//1.0f;
+
+        _vertices[2].texcoord[0] = TEX_WATER_SURFACE[U_Max];//0.5f;
+        _vertices[2].texcoord[1] = TEX_WATER_SURFACE[V_Max];//1.0f;
+
+        // triangle 2
+        _vertices[3].texcoord[0] = TEX_WATER_SURFACE[U_Max];//0.5f;
+        _vertices[3].texcoord[1] = TEX_WATER_SURFACE[V_Min];//0.5f;
+
+        _vertices[4].texcoord[0] = TEX_WATER_SURFACE[U_Min];//0.0f;
+        _vertices[4].texcoord[1] = TEX_WATER_SURFACE[V_Min];//0.5f;
+
+        _vertices[5].texcoord[0] = TEX_WATER_SURFACE[U_Min];//0.0f;
+        _vertices[5].texcoord[1] = TEX_WATER_SURFACE[V_Max];//1.0f;
     }
 }
